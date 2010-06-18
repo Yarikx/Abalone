@@ -3,3 +3,8 @@ bin/
 .classpath
 .project
 .settings/
+*.jar
+*.dex
+*.apk
+*.ap_
+*~
