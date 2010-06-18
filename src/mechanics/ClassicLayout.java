@@ -18,5 +18,5 @@ public class ClassicLayout extends Layout {
 	public byte[][] getStartField() {
 		return start;
 	}
-
+	
 }

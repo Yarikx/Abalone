@@ -19,7 +19,11 @@ public class Board implements Cloneable {
 	private int blackCaptured = 0;
 
 	public Board() {
-		field = new ClassicLayout().getStartField();
+		this(new ClassicLayout());
+	}
+	
+	public Board(Layout l) {
+		field = l.getStartField();
 	}
 
 	public byte getState(Cell c) {
@@ -56,7 +60,7 @@ public class Board implements Cloneable {
 			if (nnCell == Layout.N || m.getSource().lineLength() == 2)
 				return NOMOVE;
 			int nnnCell = getState(m.getPeak().shift(d).shift(d).shift(d));
-			if (nCell == enemyMarble && nCell == enemyMarble
+			if (nCell == enemyMarble && nnCell == enemyMarble
 					&& (nnnCell == Layout.E || nnnCell == Layout.N))
 				return ENEMYPUSH;
 		}
@@ -135,7 +139,7 @@ public class Board implements Cloneable {
 		return list;
 	}
 
-	public List<Cell> getSideMarbles(int side) {
+	public List<Cell> getSideMarbles(byte side) {
 		Cell c = Cell.first();
 		List<Cell> list = new ArrayList<Cell>();
 		while (!c.outOfBounds()) {

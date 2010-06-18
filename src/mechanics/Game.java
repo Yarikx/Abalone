@@ -10,27 +10,33 @@ public class Game {
 		Board board = new Board();
 		Alby ai = new Alby();
 		System.out.println(board);
+		
+//		board.makeMove(ai.findNextMove(board, Board.BLACK, 3));
+//		System.out.println(board);
+		//board.makeMove(new Move(new Group(new Cell())))
+//		System.out.println(ai.findNextMove(board, Board.BLACK, 3));
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		String[] s;
 		while (true) {
-			br.readLine();
+//			br.readLine();
+//			board.makeMove(ai.findNextMove(board, Board.BLACK, 4));
+//			System.out.println(board);
+//			System.out.println(board.getMarblesCaptured(Board.WHITE)+":"+board.getMarblesCaptured(Board.BLACK));
+//			br.readLine();
+//			board.makeMove(ai.findNextMove(board, Board.WHITE, 1));
+//			System.out.println(board);
+//			System.out.println(board.getMarblesCaptured(Board.WHITE)+":"+board.getMarblesCaptured(Board.BLACK));
+			s = br.readLine().split(" ");
+			if (s.length == 3)
+				board.makeMove(new Move(new Group(convCell(s[0])),
+						convDir(s[1]), convSide(s[2])));
+			else
+				board.makeMove(new Move(new Group(convCell(s[0]),
+						convCell(s[1])), convDir(s[2]), convSide(s[3])));
+			System.out.println(board);
 			board.makeMove(ai.findNextMove(board, Board.BLACK, 3));
 			System.out.println(board);
-			br.readLine();
-			board.makeMove(ai.findNextMove(board, Board.WHITE, 3));
-			System.out.println(board);
-//			s = br.readLine().split(" ");
-//			if (s.length == 3)
-//				board.makeMove(new Move(new Group(convCell(s[0])),
-//						convDir(s[1]), convSide(s[2])));
-//			else
-//				board.makeMove(new Move(new Group(convCell(s[0]),
-//						convCell(s[1])), convDir(s[2]), convSide(s[3])));
-//			System.out.println(board);
-//			System.out.println(ai.evaluatePosition(board, Board.WHITE));
-//			board.makeMove(ai.findNextMove(board, Board.BLACK));
-//			System.out.println(board);
-//			System.out.println(ai.evaluatePosition(board, Board.WHITE));
+			System.out.println(board.getMarblesCaptured(Board.WHITE)+":"+board.getMarblesCaptured(Board.BLACK));
 		}
 	}
 

@@ -7,8 +7,9 @@ import java.util.List;
 public class Alby implements ArtificialIntilligence {
 
 	private static Cell center = new Cell(5, 5);
+	private Move bestMove;
 
-	private Cell getNextCell(Board b, int side, Cell current) {
+	private Cell getNextCell(Board b, byte side, Cell current) {
 		Cell c = current;
 		do {
 			if (c.hasNext())
@@ -29,7 +30,7 @@ public class Alby implements ArtificialIntilligence {
 		}
 	}
 
-	private List<Group> getAllGroups(Board b, int side) {
+	private List<Group> getAllGroups(Board b, byte side) {
 		List<Group> list = new ArrayList<Group>();
 		for (Cell c : b.getSideMarbles(side)) {
 			list.add(new Group(c));
@@ -40,7 +41,7 @@ public class Alby implements ArtificialIntilligence {
 		return list;
 	}
 
-	public List<Move> getAllPossibleMoves(Board b, byte side) {
+	private List<Move> getAllPossibleMoves(Board b, byte side) {
 		List<Move> list = new ArrayList<Move>();
 		for (Group group : getAllGroups(b, side)) {
 			for (Direction d : Direction.getAll()) {
@@ -53,38 +54,42 @@ public class Alby implements ArtificialIntilligence {
 		return list;
 	}
 
-	public double evaluatePosition(Board b, byte side) {
-		double sum = 2 * (b.getMarblesCaptured(Board.oppositeSide(side)) - b
-				.getMarblesCaptured(side));
-		for (Cell c : b.getAllMarbles()) {
-			if (b.getState(c) == side)
-				sum += 1 / (c.findDistance(center) + 1.0);
-			else
-				sum -= 1 / (c.findDistance(center) + 1.0);
-		}
-		return sum;
-	}
-	
-	public Move findNextMove(Board b, byte side, int steps) {
-		Board futureBoard;
-		Move bestMove = null;
-		double currValue, bestValue = Double.NEGATIVE_INFINITY;
-		for (Move m : getAllPossibleMoves(b, side)) {
-			futureBoard = b.clone();
-			futureBoard.makeMove(m);
-			currValue = evaluatePosition(futureBoard, side);
-			if (currValue > bestValue) {
-				bestValue = currValue;
-				bestMove = m;
+	private double evaluatePosition(Board b, byte side, int steps,
+			double alphabeta) {
+		if (steps == 0) {
+			double sum = 3 * (b.getMarblesCaptured(Board.oppositeSide(side)) - b
+					.getMarblesCaptured(side));
+			for (Cell c : b.getAllMarbles()) {
+				if (b.getState(c) == side)
+					sum += 1 / (c.findDistance(center) + 1.0);
+				else
+					sum -= 1 / (c.findDistance(center) + 1.0);
 			}
+			return sum;
+		} else {
+			Board futureBoard;
+			Move bestMove = null;
+			double currValue, bestValue = Double.POSITIVE_INFINITY, ab = alphabeta;
+			for (Move m : getAllPossibleMoves(b, side)) {
+				futureBoard = b.clone();
+				futureBoard.makeMove(m);
+				currValue = evaluatePosition(futureBoard, Board
+						.oppositeSide(side), steps - 1, -ab);
+				if (currValue < bestValue) {
+					bestValue = currValue;
+					bestMove = m;
+//					if (ab > currValue)
+//						break;
+					ab = bestValue;
+				}
+			}
+			this.bestMove = bestMove;
+			return -bestValue;
 		}
+	}
+
+	public Move findNextMove(Board b, byte side, int steps) {
+		evaluatePosition(b, side, steps, Double.NEGATIVE_INFINITY);
 		return bestMove;
 	}
-
-	@Override
-	public Move calculateMove(Board b, int side) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }
