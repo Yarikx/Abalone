@@ -1,6 +1,5 @@
 package mechanics;
 
-import java.util.List;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
