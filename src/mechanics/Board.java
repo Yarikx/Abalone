@@ -29,7 +29,11 @@ public class Board implements Cloneable {
 	public byte getState(Cell c) {
 		return field[c.getRow()][c.getColumn()];
 	}
-
+	
+	public byte getState(int row,int column){
+		return field[row][column];
+	}
+	
 	private void setState(Cell c, byte state) {
 		field[c.getRow()][c.getColumn()] = state;
 	}
