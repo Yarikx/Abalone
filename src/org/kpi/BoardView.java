@@ -4,7 +4,10 @@ import java.util.ArrayList;
 
 import mechanics.Board;
 import mechanics.Cell;
+import mechanics.Direction;
+import mechanics.Group;
 import mechanics.Layout;
+import mechanics.Move;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
@@ -20,13 +23,17 @@ public class BoardView extends View {
 
 	static final float borderSize = 10;
 	static final float SQRT3_2 = (float) Math.sqrt(3) / 2f;
+	// FIXME get real size
 	int size = 320;
 	Paint defaultPaint, blackP, whiteP, emptyP;
 	private Board board;
 	boolean animation = false;
-	
+
+	boolean selected = false, selectionStarted = false;
+	Cell startCell;
+	Group selectedGroup;
 	PointF testCircle = null;
-	
+
 	class Ball {
 		float x, y;
 		int state;
@@ -123,9 +130,10 @@ public class BoardView extends View {
 				canvas.drawCircle(ball.x, ball.y, ballSize / 2f, curPaint);
 			}
 		}
-		
-		if(testCircle!=null){
-			canvas.drawCircle(testCircle.x, testCircle.y, 2*ballSize, defaultPaint);
+
+		if (testCircle != null) {
+			canvas.drawCircle(testCircle.x, testCircle.y, 2 * ballSize,
+					defaultPaint);
 		}
 	}
 
@@ -156,15 +164,36 @@ public class BoardView extends View {
 
 	@Override
 	public boolean onTouchEvent(MotionEvent e) {
-		if (e.getAction() == MotionEvent.ACTION_DOWN){
-			Cell cell = getCell(e.getX(), e.getY());
-			testCircle = getPointByCell(cell);
-			invalidate();
+		// if (e.getAction() == MotionEvent.ACTION_DOWN){
+		Cell cell = getCell(e.getX(), e.getY());
+		testCircle = getPointByCell(cell);
+		invalidate();
+		// }
+		if (!selected) {
+			if (e.getAction() == MotionEvent.ACTION_DOWN) {
+				startCell = getCell(e.getX(), e.getY());
+				Log.d("input", "startCell " + startCell.toString());
+				selectionStarted = true;
+			} else if (e.getAction() == MotionEvent.ACTION_MOVE) {
+
+			} else if (e.getAction() == MotionEvent.ACTION_UP
+					&& selectionStarted) {
+				selectedGroup = new Group(startCell,
+						getCell(e.getX(), e.getY()));
+				selected = true;
+				selectionStarted = false;
+				Log.d("input", "group " + selectedGroup.toString());
+			}
+		} else {
+			Move move = new Move(selectedGroup, Direction.North, Board.WHITE);
+			board.makeMove(move);
+			Log.d("input", "move");
+			selected = false;
+			drawBoard(board);
 		}
 
 		return true;
 	}
-	
 
 	public PointF getPointByCell(Cell cell) {
 
