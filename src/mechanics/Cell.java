@@ -73,13 +73,13 @@ public class Cell {
 							- c.getColumn()) == 2);
 	}
 
-	public Cell next() {
-		if ((column + 1) > (((row - 5) < 0) ? (4 + row) : 9)) {
-			return new Cell(row + 1, 1 + (row - 5) > 0 ? row - 5 : 0);
-		} else {
-			return new Cell(row, column + 1);
-		}
-	}
+//	public Cell next() {
+//		if ((column + 1) > (((row - 5) < 0) ? (4 + row) : 9)) {
+//			return new Cell(row + 1, 1 + (row - 5) > 0 ? row - 5 : 0);
+//		} else {
+//			return new Cell(row, column + 1);
+//		}
+//	}
 
 	public boolean hasNext() {
 		return !(row == 9 && column == 9);

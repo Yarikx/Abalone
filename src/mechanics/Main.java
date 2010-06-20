@@ -4,7 +4,7 @@ package mechanics;
 public class Main {
 
 	public static void main(String[] args) throws Exception {
-		Game game = new Game(new ClassicLayout(),Board.BLACK,new Ann(),new Ann());
+		Game game = new Game(new ClassicLayout(),Board.BLACK,new Ann(),new Ann(),null);
 		game.start();
 //		Board board = new Board(new TestLayout(),Board.BLACK);
 //		System.out.println(board);

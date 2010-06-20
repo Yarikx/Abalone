@@ -140,29 +140,24 @@ public class Board implements Cloneable {
 	}
 
 	public List<Cell> getAllMarbles() {
-		Cell c = Cell.first();
 		List<Cell> list = new ArrayList<Cell>();
-		while (!c.outOfBounds()) {
-			if (getState(c) == WHITE || getState(c) == BLACK)
-				list.add(c);
-			c = c.next();
-		}
+		for (int i = 1; i <= 9; i++)
+			for (int j = getMinColumn(i); j <= getMaxColumn(i); j++)
+				if (getState(i,j) == WHITE || getState(i,j) == BLACK)
+					list.add(new Cell(i,j));
 		return list;
 	}
 
 	public List<Cell> getSideMarbles(byte side) {
-		Cell c = Cell.first();
 		List<Cell> list = new ArrayList<Cell>();
-		while (!c.outOfBounds()) {
-			if (getState(c) == side)
-				list.add(c);
-			c = c.next();
-		}
+		for (int i = 1; i <= 9; i++)
+			for (int j = getMinColumn(i); j <= getMaxColumn(i); j++)
+				if (getState(i,j) == side)
+					list.add(new Cell(i,j));
 		return list;
 	}
 
 	public Board clone() {
-
 		Board b = new Board();
 		byte[][] f = new byte[11][11];
 		for (int i = 0; i < 11; i++)
@@ -174,7 +169,7 @@ public class Board implements Cloneable {
 		return b;
 	}
 
-	public static byte oppositeSide(int side) {
+	public static byte oppositeSide(byte side) {
 		return side == WHITE ? BLACK : WHITE;
 	}
 }
