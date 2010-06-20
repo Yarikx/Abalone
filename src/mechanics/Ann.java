@@ -3,20 +3,10 @@ package mechanics;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Alby implements ArtificialIntilligence {
+public class Ann implements ArtificialIntilligence {
 
 	private static Cell center = new Cell(5, 5);
 	private Move bestMove;
-
-	private Cell getNextCell(Board b, byte side, Cell current) {
-		Cell c = current;
-		do {
-			if (c.hasNext())
-				return null;
-			c = c.next();
-		} while (b.getState(c) != side);
-		return c;
-	}
 
 	private void searchForLines(Board b, Cell c, List<Group> l, Direction d,
 			int side) {
@@ -45,7 +35,7 @@ public class Alby implements ArtificialIntilligence {
 		for (Group group : getAllGroups(b, side)) {
 			for (Direction d : Direction.getAll()) {
 				Move m = new Move(group, d, side);
-				if (b.getMoveType(m) != Board.NOMOVE) {
+				if (b.getMoveType(m).getResult() != MoveType.NOMOVE) {
 					list.add(m);
 				}
 			}
@@ -56,8 +46,8 @@ public class Alby implements ArtificialIntilligence {
 	private double evaluatePosition(Board b, byte side, int steps,
 			double alphabeta) {
 		if (steps == 0) {
-			double sum = 3 * (b.getMarblesCaptured(Board.oppositeSide(side)) - b
-					.getMarblesCaptured(side));
+			double sum = 4 * (b.getMarblesCaptured(Board.oppositeSide(side)) - b
+					.getMarblesCaptured(side)) + Math.random()*0.000001;
 			for (Cell c : b.getAllMarbles()) {
 				if (b.getState(c) == side)
 					sum += 1 / (c.findDistance(center) + 1.0);
@@ -73,12 +63,12 @@ public class Alby implements ArtificialIntilligence {
 				futureBoard = b.clone();
 				futureBoard.makeMove(m);
 				currValue = evaluatePosition(futureBoard, Board
-						.oppositeSide(side), steps - 1, -ab);
+						.oppositeSide(side), steps - 1, ab);
 				if (currValue < bestValue) {
 					bestValue = currValue;
 					bestMove = m;
-//					if (ab > currValue)
-//						break;
+					if (alphabeta > bestValue)
+						break;
 					ab = bestValue;
 				}
 			}
@@ -90,5 +80,9 @@ public class Alby implements ArtificialIntilligence {
 	public Move findNextMove(Board b, byte side, int steps) {
 		evaluatePosition(b, side, steps, Double.NEGATIVE_INFINITY);
 		return bestMove;
+	}
+
+	public Move requestMove(Game g) {
+		return findNextMove(g.getBoard(), g.getSide(), 3);
 	}
 }

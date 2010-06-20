@@ -7,10 +7,6 @@ public class Board implements Cloneable {
 
 	public static final byte WHITE = 2;
 	public static final byte BLACK = 3;
-	public static final int NOMOVE = 0;
-	public static final int LEAP = 1;
-	public static final int SILENTPUSH = 2;
-	public static final int ENEMYPUSH = 3;
 	public static final int FAILURE = 0;
 	public static final int SUCCESS = 1;
 
@@ -19,26 +15,37 @@ public class Board implements Cloneable {
 	private int blackCaptured = 0;
 
 	public Board() {
-		this(new ClassicLayout());
+		this(new ClassicLayout(), BLACK);
 	}
-	
-	public Board(Layout l) {
-		field = l.getStartField();
+
+	public Board(Layout l, byte downSide) {
+		if (downSide == BLACK)
+			field = l.getBlackStartField();
+		else
+			field = l.getWhiteStartField();
+	}
+
+	public static int getMinColumn(int row) {
+		return row < 6 ? 1 : row - 4;
+	}
+
+	public static int getMaxColumn(int row) {
+		return row < 5 ? row + 4 : 9;
 	}
 
 	public byte getState(Cell c) {
 		return field[c.getRow()][c.getColumn()];
 	}
-	
-	public byte getState(int row,int column){
+
+	public byte getState(int row, int column) {
 		return field[row][column];
 	}
-	
+
 	private void setState(Cell c, byte state) {
 		field[c.getRow()][c.getColumn()] = state;
 	}
 
-	public int getMoveType(Move m) {
+	public MoveType getMoveType(Move m) {
 		// If move is a leap
 		boolean result = true;
 		for (Cell c : m.getDestination().getCells()) {
@@ -46,45 +53,45 @@ public class Board implements Cloneable {
 				result = false;
 		}
 		if (result == true)
-			return LEAP;
+			return new MoveType(MoveType.LEAP, m.getSource());
 		// If move is a pushing move...
 		if (m.isPushing()) {
 			Direction d = m.getDirection();
 			// ...check if it is a silent pushing move
 			if (getState(m.getPeak().shift(d)) == Layout.E)
-				return SILENTPUSH;
+				return new MoveType(MoveType.SILENTPUSH, m.getSource());
 			int nCell = getState(m.getPeak().shift(d));
 			if (nCell == Layout.N)
-				return NOMOVE;
+				return new MoveType(MoveType.NOMOVE);
 			int nnCell = getState(m.getPeak().shift(d).shift(d));
-			int enemyMarble = Layout.getOpposite(m.getSide());
+			byte enemyMarble = Layout.getOpposite(m.getSide());
 			if (nCell == enemyMarble
 					&& (nnCell == Layout.E || nnCell == Layout.N))
-				return ENEMYPUSH;
+				return new MoveType(MoveType.ENEMYPUSH, new Group(m.getTail(),
+						m.getPeak().shift(d)));
 			if (nnCell == Layout.N || m.getSource().lineLength() == 2)
-				return NOMOVE;
+				return new MoveType(MoveType.NOMOVE);
 			int nnnCell = getState(m.getPeak().shift(d).shift(d).shift(d));
 			if (nCell == enemyMarble && nnCell == enemyMarble
 					&& (nnnCell == Layout.E || nnnCell == Layout.N))
-				return ENEMYPUSH;
+				return new MoveType(MoveType.ENEMYPUSH, new Group(m.getTail(),
+						m.getPeak().shift(d).shift(d)));
 		}
-		return NOMOVE;
+		return new MoveType(MoveType.NOMOVE);
 	}
 
 	public int makeMove(Move m) {
-		int type = getMoveType(m);
-		if (type == NOMOVE)
+		int type = getMoveType(m).getResult();
+		if (type == MoveType.NOMOVE)
 			return FAILURE;
-		else if (type == LEAP || type == SILENTPUSH) {
+		else if (type == MoveType.LEAP || type == MoveType.SILENTPUSH) {
 			for (Cell c : m.getSource().getCells())
 				setState(c, Layout.E);
 			for (Cell c : m.getDestination().getCells())
 				setState(c, m.getSide());
 		} else {
-			// int buffer = Layout.E;
 			byte src = Layout.E, dest;
 			Cell c = m.getTail();
-			// Cell nc = c.shift(m.getDirection());
 
 			do {
 				dest = getState(c);
@@ -155,7 +162,7 @@ public class Board implements Cloneable {
 	}
 
 	public Board clone() {
-		
+
 		Board b = new Board();
 		byte[][] f = new byte[11][11];
 		for (int i = 0; i < 11; i++)
@@ -166,7 +173,7 @@ public class Board implements Cloneable {
 		b.blackCaptured = blackCaptured;
 		return b;
 	}
-	
+
 	public static byte oppositeSide(int side) {
 		return side == WHITE ? BLACK : WHITE;
 	}

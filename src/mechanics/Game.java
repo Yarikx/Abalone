@@ -1,68 +1,40 @@
 package mechanics;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-
 public class Game {
 
-	public static void main(String[] args) throws Exception {
-		Board board = new Board();
-		Alby ai = new Alby();
+	private static int PLAYER = 1;
+	private static int AI = 2;
+
+	private Board board;
+	private Player blacksPlayer;
+	private Player whitesPlayer;
+	private byte currentSide = Board.BLACK;
+
+	public Game(Layout l, byte playerSide, Player blacks, Player whites) {
+		board = new Board(l, playerSide);
+		blacksPlayer = blacks;
+		whitesPlayer = whites;
+	}
+
+	public void start() {
 		System.out.println(board);
-		
-//		board.makeMove(ai.findNextMove(board, Board.BLACK, 3));
-//		System.out.println(board);
-		//board.makeMove(new Move(new Group(new Cell())))
-//		System.out.println(ai.findNextMove(board, Board.BLACK, 3));
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		String[] s;
-		while (true) {
-//			br.readLine();
-//			board.makeMove(ai.findNextMove(board, Board.BLACK, 4));
-//			System.out.println(board);
-//			System.out.println(board.getMarblesCaptured(Board.WHITE)+":"+board.getMarblesCaptured(Board.BLACK));
-//			br.readLine();
-//			board.makeMove(ai.findNextMove(board, Board.WHITE, 1));
-//			System.out.println(board);
-//			System.out.println(board.getMarblesCaptured(Board.WHITE)+":"+board.getMarblesCaptured(Board.BLACK));
-			s = br.readLine().split(" ");
-			if (s.length == 3)
-				board.makeMove(new Move(new Group(convCell(s[0])),
-						convDir(s[1]), convSide(s[2])));
-			else
-				board.makeMove(new Move(new Group(convCell(s[0]),
-						convCell(s[1])), convDir(s[2]), convSide(s[3])));
+		while (board.getMarblesCaptured(Board.WHITE) < 6
+				&& board.getMarblesCaptured(Board.BLACK) < 6) {
+			if (currentSide == Board.BLACK) {
+				board.makeMove(blacksPlayer.requestMove(this));
+			} else {
+				board.makeMove(whitesPlayer.requestMove(this));
+			}
+			currentSide = Board.oppositeSide(currentSide);
 			System.out.println(board);
-			board.makeMove(ai.findNextMove(board, Board.BLACK, 3));
-			System.out.println(board);
-			System.out.println(board.getMarblesCaptured(Board.WHITE)+":"+board.getMarblesCaptured(Board.BLACK));
 		}
 	}
 
-	public static Direction convDir(String s) {
-		if (s.equals("NW"))
-			return Direction.NorthWest;
-		else if (s.equals("N"))
-			return Direction.North;
-		else if (s.equals("E"))
-			return Direction.East;
-		else if (s.equals("SE"))
-			return Direction.SouthEast;
-		else if (s.equals("S"))
-			return Direction.South;
-		else
-			return Direction.West;
+	public Board getBoard() {
+		return board;
 	}
 
-	public static Cell convCell(String s) {
-		return new Cell((int) s.charAt(0) - (int) 'A' + 1, Integer
-				.parseInt(Character.toString(s.charAt(1))));
-	}
-
-	public static byte convSide(String s) {
-		if (s.equals("W"))
-			return Board.WHITE;
-		else
-			return Board.BLACK;
+	public byte getSide() {
+		return currentSide;
 	}
 }

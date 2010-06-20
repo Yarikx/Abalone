@@ -1,0 +1,9 @@
+20.06.10 22:00 from Alex
+	1. New methods of class Group:
+		boolean isValid(Cell,Cell) - returns if there can be valid group between to cells
+	2. New class Game with methods:
+		Game(Layout,int,Player,Player) - creates new game with given layouts and players
+		Board getBoard()
+	3. Interface Player with method:
+		Move requestMove() - this method asks player (whether human or AI) for a move
+	
