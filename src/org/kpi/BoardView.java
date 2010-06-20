@@ -111,23 +111,14 @@ public class BoardView extends View {
 		// TODO boar edges
 
 		// TODO cells
-		Paint curPaint = null;
+		
 		if (balls != null) {
 			for (Ball ball : balls) {
 				// canvas.drawRect(ball.x, ball.y, ball.x + ballSize, ball.y
 				// + ballSize, defaultPaint);
-				switch (ball.state) {
-				case Layout.B:
-					curPaint = blackP;
-					break;
-				case Layout.W:
-					curPaint = whiteP;
-					break;
-				case Layout.E:
-					curPaint = emptyP;
-					break;
-				}
-				canvas.drawCircle(ball.x, ball.y, ballSize / 2f, curPaint);
+				
+				drawBall(ball,canvas);
+				
 			}
 		}
 
@@ -135,6 +126,22 @@ public class BoardView extends View {
 			canvas.drawCircle(testCircle.x, testCircle.y, 2 * ballSize,
 					defaultPaint);
 		}
+	}
+
+	private void drawBall(Ball ball, Canvas canvas) {
+		Paint curPaint = null;
+		switch (ball.state) {
+		case Layout.B:
+			curPaint = blackP;
+			break;
+		case Layout.W:
+			curPaint = whiteP;
+			break;
+		case Layout.E:
+			curPaint = emptyP;
+			break;
+		}
+		canvas.drawCircle(ball.x, ball.y, ballSize / 2f, curPaint);
 	}
 
 	public void drawBoard(Board board) {
@@ -236,5 +243,10 @@ public class BoardView extends View {
 		Log.d("draw", "row = " + row);
 		Log.d("draw", "column = " + column);
 		return new Cell(row, column);
+	}
+	
+	public Move getMove(byte state){
+		//TODO getmove
+		return null;
 	}
 }
