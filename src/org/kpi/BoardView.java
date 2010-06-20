@@ -5,9 +5,12 @@ import java.util.ArrayList;
 import mechanics.Board;
 import mechanics.Cell;
 import mechanics.Direction;
+import mechanics.Game;
 import mechanics.Group;
 import mechanics.Layout;
 import mechanics.Move;
+import mechanics.MoveType;
+import mechanics.Player;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
@@ -19,7 +22,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
-public class BoardView extends View {
+public class BoardView extends View implements Player{
 
 	static final float borderSize = 10;
 	static final float SQRT3_2 = (float) Math.sqrt(3) / 2f;
@@ -29,10 +32,13 @@ public class BoardView extends View {
 	private Board board;
 	boolean animation = false;
 
-	boolean selected = false, selectionStarted = false;
+	boolean selected = false, selectionStarted = false, moveRequested = false;
 	Cell startCell;
 	Group selectedGroup;
 	PointF testCircle = null;
+
+	Object monitor;
+	Move resultMove;
 
 	class Ball {
 		float x, y;
@@ -61,6 +67,7 @@ public class BoardView extends View {
 
 	private void init() {
 		setFocusable(true);
+		monitor = new Object();
 		Resources r = getResources();
 		defaultPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		defaultPaint.setColor(r.getColor(R.color.defaultColor));
@@ -111,14 +118,14 @@ public class BoardView extends View {
 		// TODO boar edges
 
 		// TODO cells
-		
+
 		if (balls != null) {
 			for (Ball ball : balls) {
 				// canvas.drawRect(ball.x, ball.y, ball.x + ballSize, ball.y
 				// + ballSize, defaultPaint);
-				
-				drawBall(ball,canvas);
-				
+
+				drawBall(ball, canvas);
+
 			}
 		}
 
@@ -176,30 +183,57 @@ public class BoardView extends View {
 		testCircle = getPointByCell(cell);
 		invalidate();
 		// }
-		if (!selected) {
-			if (e.getAction() == MotionEvent.ACTION_DOWN) {
-				startCell = getCell(e.getX(), e.getY());
-				Log.d("input", "startCell " + startCell.toString());
-				selectionStarted = true;
-			} else if (e.getAction() == MotionEvent.ACTION_MOVE) {
+		if (moveRequested) {
+			if (!selected) {
+				if (e.getAction() == MotionEvent.ACTION_DOWN) {
+					startCell = getCell(e.getX(), e.getY());
+					Log.d("input", "startCell " + startCell.toString());
+					selectionStarted = true;
+				} else if (e.getAction() == MotionEvent.ACTION_MOVE) {
 
-			} else if (e.getAction() == MotionEvent.ACTION_UP
-					&& selectionStarted) {
-				selectedGroup = new Group(startCell,
-						getCell(e.getX(), e.getY()));
-				selected = true;
-				selectionStarted = false;
-				Log.d("input", "group " + selectedGroup.toString());
+				} else if (e.getAction() == MotionEvent.ACTION_UP
+						&& selectionStarted) {
+					selectedGroup = new Group(startCell, getCell(e.getX(), e
+							.getY()));
+					selected = true;
+					selectionStarted = false;
+					Log.d("input", "group " + selectedGroup.toString());
+				}
+			} else {
+				Move move = new Move(selectedGroup, Direction.North,
+						Board.WHITE);
+
+				MoveType moveType = board.getMoveType(move);
+				doAnimation(moveType);
+				resultMove = move;
+				synchronized (monitor) {
+					monitor.notify();
+				}
+				
+				// board.makeMove(move);
+				// Log.d("input", "move");
+				// selected = false;
+				// drawBoard(board);
+
 			}
 		} else {
-			Move move = new Move(selectedGroup, Direction.North, Board.WHITE);
-			board.makeMove(move);
-			Log.d("input", "move");
-			selected = false;
-			drawBoard(board);
-		}
+			if (e.getAction() == MotionEvent.ACTION_DOWN)
+				(new Thread(new Runnable() {
 
+					@Override
+					public void run() {
+						Move mov = requestMove(null);
+						Log.d("move", mov.toString());
+
+					}
+				})).start();
+		}
 		return true;
+	}
+
+	private void doAnimation(MoveType moveType) {
+		// TODO Auto-generated method stub
+
 	}
 
 	public PointF getPointByCell(Cell cell) {
@@ -244,9 +278,20 @@ public class BoardView extends View {
 		Log.d("draw", "column = " + column);
 		return new Cell(row, column);
 	}
-	
-	public Move getMove(byte state){
-		//TODO getmove
-		return null;
+
+	public Move requestMove(Game g) {
+		// TODO getmove
+
+		moveRequested = true;
+		synchronized (monitor) {
+			try {
+				monitor.wait();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		return resultMove;
 	}
 }
