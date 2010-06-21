@@ -21,15 +21,21 @@ public class Game {
 	public void start() {
 		int i = 0;
 		System.out.println(board);
+		Move move = null;
 		while (board.getMarblesCaptured(Board.WHITE) < 6
 				&& board.getMarblesCaptured(Board.BLACK) < 6) {
 			if (currentSide == Board.BLACK) {
-				board.makeMove(blacksPlayer.requestMove(this));
+				move = blacksPlayer.requestMove(this);
 			} else {
-				board.makeMove(whitesPlayer.requestMove(this));
+				move = whitesPlayer.requestMove(this);
 			}
-			if (watcher != null)
+			if(watcher!=null){
+				watcher.doAnimation(board.getMoveType(move));
+			}
+			board.makeMove(move);
+			if (watcher != null){
 				watcher.updateView();
+			}
 			currentSide = Board.oppositeSide(currentSide);
 			System.out.println(board);
 			System.out.println(i++ + ". "+board.getMarblesCaptured(Board.WHITE)+":"+board.getMarblesCaptured(Board.BLACK));
