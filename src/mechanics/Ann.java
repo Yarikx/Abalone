@@ -83,6 +83,6 @@ public class Ann implements ArtificialIntilligence {
 	}
 
 	public Move requestMove(Game g) {
-		return findNextMove(g.getBoard(), g.getSide(), 3);
+		return findNextMove(g.getBoard(), g.getSide(), 1);
 	}
 }
