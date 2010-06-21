@@ -30,7 +30,7 @@ public class Game {
 				move = whitesPlayer.requestMove(this);
 			}
 			if(watcher!=null){
-				watcher.doAnimation(board.getMoveType(move));
+				watcher.doAnimation(board.getMoveType(move),move.getDirection());
 			}
 			board.makeMove(move);
 			if (watcher != null){

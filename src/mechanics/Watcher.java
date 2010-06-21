@@ -3,5 +3,5 @@ package mechanics;
 public interface Watcher {
 
 	void updateView();
-	void doAnimation(MoveType moveType);
+	void doAnimation(MoveType moveType, Direction direction);
 }

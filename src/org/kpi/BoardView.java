@@ -1,6 +1,8 @@
 package org.kpi;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 import mechanics.Board;
 import mechanics.Cell;
@@ -12,6 +14,7 @@ import mechanics.Move;
 import mechanics.MoveType;
 import mechanics.Player;
 import mechanics.Watcher;
+import android.R.anim;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
@@ -23,7 +26,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
-public class BoardView extends View implements Player,Watcher{
+public class BoardView extends View implements Player, Watcher {
 
 	static final float borderSize = 10;
 	static final float SQRT3_2 = (float) Math.sqrt(3) / 2f;
@@ -37,10 +40,13 @@ public class BoardView extends View implements Player,Watcher{
 	Cell startCell;
 	Group selectedGroup;
 	PointF testCircle = null;
-
+	
+	//getMove
 	Object monitor;
 	Move resultMove;
-
+	//animation
+	List<Ball> emptyBalls,animBals;
+	final static int T=50,time = 1000,N=time/T;
 	class Ball {
 		float x, y;
 		int state;
@@ -129,6 +135,20 @@ public class BoardView extends View implements Player,Watcher{
 
 			}
 		}
+		
+		if(animation){
+			for (Ball ball : emptyBalls) {
+
+				drawBall(ball, canvas);
+
+			}
+			for (Ball ball : animBals) {
+
+				drawBall(ball, canvas);
+
+			}
+			
+		}
 
 		if (testCircle != null) {
 			canvas.drawCircle(testCircle.x, testCircle.y, 2 * ballSize,
@@ -153,7 +173,7 @@ public class BoardView extends View implements Player,Watcher{
 	}
 
 	public void drawBoard(Board board) {
-//		invalidate();
+		// invalidate();
 		this.board = board;
 
 		balls = new ArrayList<Ball>();
@@ -218,23 +238,18 @@ public class BoardView extends View implements Player,Watcher{
 
 			}
 		} else {
-//			if (e.getAction() == MotionEvent.ACTION_DOWN)
-//				(new Thread(new Runnable() {
-//
-//					@Override
-//					public void run() {
-//						Move mov = requestMove(null);
-//						Log.d("move", mov.toString());
-//
-//					}
-//				})).start();
+			// if (e.getAction() == MotionEvent.ACTION_DOWN)
+			// (new Thread(new Runnable() {
+			//
+			// @Override
+			// public void run() {
+			// Move mov = requestMove(null);
+			// Log.d("move", mov.toString());
+			//
+			// }
+			// })).start();
 		}
 		return true;
-	}
-
-	public void doAnimation(MoveType moveType) {
-		// TODO Auto-generated method stub
-
 	}
 
 	public PointF getPointByCell(Cell cell) {
@@ -299,11 +314,66 @@ public class BoardView extends View implements Player,Watcher{
 	@Override
 	public void updateView() {
 		drawBoard();
-		
+
 	}
 
 	private void drawBoard() {
 		drawBoard(board);
+
+	}
+
+	@Override
+	public void doAnimation(MoveType moveType, Direction direction) {
+		double angle = 0;
+		double PI = Math.PI;
+		if (direction == Direction.East) {
+			angle = 0;
+		} else if (direction == Direction.SouthEast) {
+			angle = PI/3d;
+		} else if (direction == Direction.South) {
+			angle = 2d*PI/3d;
+		} else if (direction == Direction.West) {
+			angle = PI;
+		} else if (direction == Direction.NorthWest) {
+			angle = -2d*PI/3d;
+		} else if (direction == Direction.North) {
+			angle = -PI/3d;
+		}
+		
+		emptyBalls = new LinkedList<Ball>();
+		animBals = new LinkedList<Ball>();
+		for(Cell cell:moveType.getMovedCells().getCells()){
+			float x,y;
+			PointF point = getPointByCell(cell);
+			x = point.x;
+			y = point.y;
+			emptyBalls.add(new Ball(x, y, Layout.E));
+			animBals.add(new Ball(x, y, board.getState(cell)));
+		}
+		
+		animation = true;
+		
+		postInvalidate();
+		
+		for(int i=0;i<N;i++){
+			for(Ball ball:animBals){
+				ball.x+=(1d/(double)N)*Math.cos(angle)*ballSize;
+				ball.y+=(1d/(double)N)*Math.sin(angle)*ballSize;
+			}
+			
+			postInvalidate();
+			try {
+				Thread.sleep(T);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		
+		
+		animation = false;
+		
 		
 	}
 }
