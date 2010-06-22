@@ -7,6 +7,7 @@ public class Ann implements ArtificialIntilligence {
 
 	private static Cell center = new Cell(5, 5);
 	private Move bestMove;
+	private int i;
 
 	private void searchForLines(Board b, Cell c, List<Group> l, Direction d,
 			int side) {
