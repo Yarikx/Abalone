@@ -1,5 +1,9 @@
 package mechanics;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 public class Game {
 
 	private static int PLAYER = 1;
@@ -20,6 +24,7 @@ public class Game {
 
 	public void start() {
 		int i = 0;
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		System.out.println(board);
 		while (board.getMarblesCaptured(Board.WHITE) < 6
 				&& board.getMarblesCaptured(Board.BLACK) < 6) {
@@ -30,6 +35,13 @@ public class Game {
 			}
 			if (watcher != null)
 				watcher.updateView();
+			try {
+				br.readLine();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 			currentSide = Board.oppositeSide(currentSide);
 			System.out.println(board);
 			System.out.println(i++ + ". "+board.getMarblesCaptured(Board.WHITE)+":"+board.getMarblesCaptured(Board.BLACK));

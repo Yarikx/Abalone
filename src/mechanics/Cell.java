@@ -48,7 +48,7 @@ public class Cell {
 	}
 
 	public boolean onAnyLine(Cell c) {
-		for (Direction d : Direction.getAll()) {
+		for (Direction d : Direction.values()) {
 			if (onLine(c, d))
 				return true;
 		}
@@ -73,30 +73,6 @@ public class Cell {
 							- c.getColumn()) == 2);
 	}
 
-//	public Cell next() {
-//		if ((column + 1) > (((row - 5) < 0) ? (4 + row) : 9)) {
-//			return new Cell(row + 1, 1 + (row - 5) > 0 ? row - 5 : 0);
-//		} else {
-//			return new Cell(row, column + 1);
-//		}
-//	}
-
-	public boolean hasNext() {
-		return !(row == 9 && column == 9);
-	}
-
-	public boolean outOfBounds() {
-		return (row >= 10);
-	}
-
-	public static Cell first() {
-		return new Cell(1, 1);
-	}
-
-	public static Cell last() {
-		return new Cell(9, 9);
-	}
-
 	public int findDistance(Cell c) {
 		int cols = column - c.getColumn();
 		int rows = row - c.getRow();
@@ -105,10 +81,6 @@ public class Cell {
 		else
 			return Math.max(Math.abs(cols), Math.abs(rows));
 
-	}
-
-	public boolean equals(Cell another) {
-		return (row == another.getRow() && column == another.getColumn());
 	}
 
 	public String toString() {

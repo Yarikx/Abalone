@@ -64,7 +64,7 @@ public class Board implements Cloneable {
 			if (nCell == Layout.N)
 				return new MoveType(MoveType.NOMOVE);
 			int nnCell = getState(m.getPeak().shift(d).shift(d));
-			byte enemyMarble = Layout.getOpposite(m.getSide());
+			byte enemyMarble = oppositeSide(m.getSide());
 			if (nCell == enemyMarble
 					&& (nnCell == Layout.E || nnCell == Layout.N))
 				return new MoveType(MoveType.ENEMYPUSH, new Group(m.getTail(),

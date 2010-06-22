@@ -33,7 +33,7 @@ public class Ann implements ArtificialIntilligence {
 	private List<Move> getAllPossibleMoves(Board b, byte side) {
 		List<Move> list = new ArrayList<Move>();
 		for (Group group : getAllGroups(b, side)) {
-			for (Direction d : Direction.getAll()) {
+			for (Direction d : Direction.values()) {
 				Move m = new Move(group, d, side);
 				if (b.getMoveType(m).getResult() != MoveType.NOMOVE) {
 					list.add(m);
@@ -67,8 +67,8 @@ public class Ann implements ArtificialIntilligence {
 				if (currValue < bestValue) {
 					bestValue = currValue;
 					bestMove = m;
-					if (alphabeta > bestValue)
-						break;
+//					if (alphabeta > bestValue)
+//						break;
 					ab = bestValue;
 				}
 			}
