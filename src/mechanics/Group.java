@@ -78,6 +78,10 @@ public class Group {
 	public static boolean isValid(Cell start, Cell end) {
 		return (start.onAnyLine(end) && cellsInRange(start, end)< 3);
 	}
+	
+	public boolean isValid(){
+		return isValid(this.getFirstEnd(), this.getSecondEnd());
+	}
 
 	public String toString() {
 		if (atom()) {

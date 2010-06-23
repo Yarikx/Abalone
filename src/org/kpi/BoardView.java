@@ -228,21 +228,25 @@ public class BoardView extends View implements Player, Watcher {
 				} else if (e.getAction() == MotionEvent.ACTION_UP) {
 					Move move = new Move(selectedGroup, Direction.North,
 							Board.BLACK);
+					if (selectedGroup.isValid()) {
+						MoveType moveType = board.getMoveType(move);
+						if (moveType.getResult() != MoveType.NOMOVE) {
+							resultMove = move;
+							synchronized (monitor) {
+								monitor.notify();
+							}
 
-					MoveType moveType = board.getMoveType(move);
-					if (moveType.getResult() != MoveType.NOMOVE) {
-						resultMove = move;
-						synchronized (monitor) {
-							monitor.notify();
+							moveRequested = false;
+							// board.makeMove(move);
+							// Log.d("input", "move");
+							// selected = false;
+							// drawBoard(board);
 						}
-						
-						moveRequested = false;
-						// board.makeMove(move);
-						// Log.d("input", "move");
-						// selected = false;
-						// drawBoard(board);
+					}else{
+						selected=false;
+						selectionStarted = false;
+						//TODO show notification that group is not valid
 					}
-					selected = false;
 				}
 
 			}
