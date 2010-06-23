@@ -216,10 +216,20 @@ public class BoardView extends View implements Player, Watcher {
 						&& selectionStarted) {
 					selectedGroup = new Group(startCell, getCell(e.getX(), e
 							.getY()));
-					selected = true;
+
 					selectionStarted = false;
 					Log.d("input", "group " + selectedGroup.toString());
+
+					if (selectedGroup.isValid()) {
+						selected = true;
+						Log.d("group", "group is valid");
+						// TODO notification
+					}else{
+						Log.d("group", "group is not valid");
+						selectedGroup = null;
+					}
 				}
+				// if selected
 			} else {
 				if (e.getAction() == MotionEvent.ACTION_DOWN) {
 
@@ -228,25 +238,28 @@ public class BoardView extends View implements Player, Watcher {
 				} else if (e.getAction() == MotionEvent.ACTION_UP) {
 					Move move = new Move(selectedGroup, Direction.North,
 							Board.BLACK);
-					if (selectedGroup.isValid()) {
-						MoveType moveType = board.getMoveType(move);
-						if (moveType.getResult() != MoveType.NOMOVE) {
-							resultMove = move;
-							synchronized (monitor) {
-								monitor.notify();
-							}
 
-							moveRequested = false;
-							// board.makeMove(move);
-							// Log.d("input", "move");
-							// selected = false;
-							// drawBoard(board);
+					MoveType moveType = board.getMoveType(move);
+					if (moveType.getResult() != MoveType.NOMOVE) {
+						resultMove = move;
+						synchronized (monitor) {
+							monitor.notify();
 						}
-					}else{
-						selected=false;
+						Log.d("group", "moved");
+						// board.makeMove(move);
+						// Log.d("input", "move");
+						// selected = false;
+						// drawBoard(board);
+						moveRequested = false;
+						selected = false;
 						selectionStarted = false;
-						//TODO show notification that group is not valid
+					} else {
+						//moveRequested = true;
+						Log.d("group", "NOMOVE");
+						//TODO delete 
+						selected = false;
 					}
+
 				}
 
 			}
