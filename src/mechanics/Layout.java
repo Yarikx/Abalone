@@ -22,7 +22,4 @@ public abstract class Layout {
 		return field;
 	}
 
-	public static byte getOpposite(byte side) {
-		return side == W ? B : W;
-	}
 }
