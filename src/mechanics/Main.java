@@ -20,8 +20,9 @@ public class Main {
 		Random r = new Random();
 		int x, y;
 		List<Move> l = new ArrayList<Move>();
-		for (int j = 1; j < 100000; j++) {
-			
+		
+		for (int j = 1; j < 2; j++) {
+			ai.findNextMove(b, Board.BLACK, 3);
 //			b.clone();
 //			ai.getAllGroups(b, Board.WHITE);
 //			x = r.nextInt(4)+1;
@@ -34,7 +35,7 @@ public class Main {
 //			b.getMoveType(m);
 //			}
 //			b.makeMove(m);
-			ai.getAllPossibleMoves(b, Board.BLACK);
+//			ai.getAllPossibleMoves(b, Board.BLACK);
 //			int u = 0;
 //			ai.getAllGroups(b, Board.WHITE);
 		}
