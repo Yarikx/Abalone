@@ -144,7 +144,7 @@ public class Board implements Cloneable {
 		for (int i = 1; i <= 9; i++)
 			for (int j = getMinColumn(i); j <= getMaxColumn(i); j++)
 				if (getState(i,j) == WHITE || getState(i,j) == BLACK)
-					list.add(new Cell(i,j));
+					list.add(Cell.get(i, j));
 		return list;
 	}
 
@@ -153,7 +153,7 @@ public class Board implements Cloneable {
 		for (int i = 1; i <= 9; i++)
 			for (int j = getMinColumn(i); j <= getMaxColumn(i); j++)
 				if (getState(i,j) == side)
-					list.add(new Cell(i,j));
+					list.add(Cell.get(i, j));
 		return list;
 	}
 

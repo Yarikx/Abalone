@@ -4,12 +4,23 @@ public class Cell {
 
 	private int row;
 	private int column;
+	private static Cell[][] cellStorage = new Cell[12][12];
 
-	public Cell(int newRow, int newColumn) {
+	static void init() {
+		for (int i = 0; i < 12; i++)
+			for (int j = 0; j < 12; j++)
+				cellStorage[i][j] = new Cell(i, j);
+	}
+
+	private Cell(int newRow, int newColumn) {
 		row = newRow;
 		column = newColumn;
 	}
 
+	public static Cell get(int row, int column) {
+		return cellStorage[row][column];
+	}
+	
 	public int getRow() {
 		return row;
 	}
@@ -44,7 +55,7 @@ public class Cell {
 			break;
 		default:
 		}
-		return new Cell(newRow, newColumn);
+		return cellStorage[newRow][newColumn];
 	}
 
 	public boolean onAnyLine(Cell c) {

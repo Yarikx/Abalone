@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Ann implements ArtificialIntilligence {
 
-	private static Cell center = new Cell(5, 5);
+	private static Cell center = Cell.get(5, 5);
 	private Move bestMove;
 	private int i;
 
@@ -20,7 +20,7 @@ public class Ann implements ArtificialIntilligence {
 		}
 	}
 
-	private List<Group> getAllGroups(Board b, byte side) {
+	public List<Group> getAllGroups(Board b, byte side) {
 		List<Group> list = new ArrayList<Group>();
 		for (Cell c : b.getSideMarbles(side)) {
 			list.add(new Group(c));
@@ -31,7 +31,7 @@ public class Ann implements ArtificialIntilligence {
 		return list;
 	}
 
-	private List<Move> getAllPossibleMoves(Board b, byte side) {
+	public List<Move> getAllPossibleMoves(Board b, byte side) {
 		List<Move> list = new ArrayList<Move>();
 		for (Group group : getAllGroups(b, side)) {
 			for (Direction d : Direction.values()) {
