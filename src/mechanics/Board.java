@@ -13,6 +13,7 @@ public class Board implements Cloneable {
 	private byte[][] field;
 	private int whiteCaptured = 0;
 	private int blackCaptured = 0;
+	private Cell center = Cell.get(5, 5);
 
 	public Board() {
 		this(new ClassicLayout(), BLACK);
@@ -33,6 +34,10 @@ public class Board implements Cloneable {
 		return row < 5 ? row + 4 : 9;
 	}
 
+	public byte[][] getField() {
+		return field;
+	}
+	
 	public byte getState(Cell c) {
 		return field[c.getRow()][c.getColumn()];
 	}
@@ -154,7 +159,7 @@ public class Board implements Cloneable {
 		for (int i = 1; i <= 9; i++)
 			for (int j = getMinColumn(i); j <= getMaxColumn(i); j++)
 				if (getState(i,j) == WHITE || getState(i,j) == BLACK)
-					list.add(new Cell(i,j));
+					list.add(Cell.get(i, j));
 		return list;
 	}
 
@@ -163,7 +168,7 @@ public class Board implements Cloneable {
 		for (int i = 1; i <= 9; i++)
 			for (int j = getMinColumn(i); j <= getMaxColumn(i); j++)
 				if (getState(i,j) == side)
-					list.add(new Cell(i,j));
+					list.add(Cell.get(i, j));
 		return list;
 	}
 
@@ -182,4 +187,15 @@ public class Board implements Cloneable {
 	public static byte oppositeSide(byte side) {
 		return side == WHITE ? BLACK : WHITE;
 	}
+	
+	public double evaluatePosition(byte side) {
+		double sum = 0;
+		for (int i = 1; i <= 9; i++)
+			for (int j = getMinColumn(i); j <= getMaxColumn(i); j++)
+				if (field[i][j] == side)
+					sum -= Cell.get(i, j).findDistance(center);
+				else if (field[i][j] == oppositeSide(side))
+					sum += Cell.get(i, j).findDistance(center);
+		return sum;
+		}
 }
