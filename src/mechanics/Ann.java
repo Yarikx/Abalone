@@ -61,15 +61,32 @@ public class Ann implements ArtificialIntilligence {
 			Board futureBoard;
 			Move bestMove = null;
 			double currValue, bestValue = Double.POSITIVE_INFINITY, ab = alphabeta;
+			Cell shifted1, shifted2, shifted3;
 			int stack;
+			byte state;
 			byte[][] f = b.getField();
 			for (int i = 0; i < 11; i++)
 				for (int j = 0; j < 11; j++) {
 					if (f[i][j] == side) {
-						for (Direction d : Direction.values()) {
+						for (Direction d : Direction.getSecondary()) {
 							stack = 1;
-							if (b.getState(Cell.get(i,j).shift(d)) == side)
-							
+							shifted1 = Cell.get(i,j).shift(d);
+							state = b.getState(shifted1);
+							if (state == Layout.N) {
+								
+							} else
+							if (state == side) {
+								shifted2 = shifted1.shift(d);
+								state = b.getState(shifted2);
+								if (state == Layout.N || state == Layout.E) {
+									//TODO Silentpush 2 
+								} else if (state == Board.oppositeSide(side)) {
+									//TODO Enemypush 3
+								} else {
+									
+								}
+							}
+								
 							futureBoard = b.clone();
 							futureBoard.makeMove(m);
 						}
