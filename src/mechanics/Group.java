@@ -17,21 +17,21 @@ public class Group {
 		cells[0] = start;
 		cells[length - 1] = end;
 		if (length == 3)
-			cells[1] = Cell.get(Math.abs(start.getRow() + end.getRow()) / 2,
+			cells[1] = new Cell(Math.abs(start.getRow() + end.getRow()) / 2,
 					Math.abs(start.getColumn() + end.getColumn()) / 2);
 		else if (length == 4) {
-			cells[1] = Cell.get(Math.abs(start.getRow() + end.getRow()) / 2,
+			cells[1] = new Cell(Math.abs(start.getRow() + end.getRow()) / 2,
 					Math.abs(start.getColumn() + end.getColumn()) / 2);
-			cells[2] = Cell.get(
+			cells[2] = new Cell(
 					Math.abs(start.getRow() + end.getRow() + 1) / 2, Math
 							.abs(start.getColumn() + end.getColumn() + 1) / 2);
 		} else if (length == 5) {
-			cells[2] = Cell.get(Math.abs(start.getRow() + end.getRow()) / 2,
+			cells[2] = new Cell(Math.abs(start.getRow() + end.getRow()) / 2,
 					Math.abs(start.getColumn() + end.getColumn()) / 2);
-			cells[1] = Cell.get(
+			cells[1] = new Cell(
 					Math.abs(start.getRow() + cells[2].getRow()) / 2, Math
 							.abs(start.getColumn() + cells[2].getColumn()) / 2);
-			cells[3] = Cell.get(Math.abs(cells[2].getRow() + end.getRow()) / 2,
+			cells[3] = new Cell(Math.abs(cells[2].getRow() + end.getRow()) / 2,
 					Math.abs(cells[2].getColumn() + end.getColumn()) / 2);
 		}
 	}

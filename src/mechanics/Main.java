@@ -1,47 +1,11 @@
 package mechanics;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Random;
-
 
 public class Main {
 
-	private static void globalInit() {
-		Cell.init();
-	}
-	
 	public static void main(String[] args) throws Exception {
-		globalInit();
-		long i = Calendar.getInstance().getTimeInMillis();
-		Ann ai = new Ann();
-		Board b = new Board();
-		Random r = new Random();
-		int x, y;
-		List<Move> l = new ArrayList<Move>();
-		
-		for (int j = 1; j < 2; j++) {
-			ai.findNextMove(b, Board.BLACK, 3);
-//			b.clone();
-//			ai.getAllGroups(b, Board.WHITE);
-//			x = r.nextInt(4)+1;
-//			y = r.nextInt(4)+1;
-//			Move m = new Move(new Group(
-//					new Cell(x,y),
-//					new Cell(x+2,y+2)),Direction.NorthWest,Board.WHITE);
-//			l.add(m);
-//			for (int K = 1; K < 7; K++) {
-//			b.getMoveType(m);
-//			}
-//			b.makeMove(m);
-//			ai.getAllPossibleMoves(b, Board.BLACK);
-//			int u = 0;
-//			ai.getAllGroups(b, Board.WHITE);
-		}
-		System.out.println(Calendar.getInstance().getTimeInMillis() - i);
-//		Game game = new Game(new ClassicLayout(),Board.BLACK,new Ann(),new Ann(),null);
-//		game.start();
+		Game game = new Game(new ClassicLayout(),Board.BLACK,new Ann(),new Ann(),null);
+		game.start();
 //		Board board = new Board(new TestLayout(),Board.BLACK);
 //		System.out.println(board);
 //		Ann ai = new Ann();
@@ -53,7 +17,7 @@ public class Main {
 //		System.out.println(ai.findNextMove(board, Board.BLACK, 3));
 //		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 //		String[] s;
-//		while (true) {
+		while (true) {
 //			br.readLine();
 //			board.makeMove(ai.findNextMove(board, Board.BLACK, 4));
 //			System.out.println(board);
@@ -73,7 +37,7 @@ public class Main {
 //			board.makeMove(ai.findNextMove(board, Board.BLACK, 3));
 //			System.out.println(board);
 //			System.out.println(board.getMarblesCaptured(Board.WHITE)+":"+board.getMarblesCaptured(Board.BLACK));
-//		}
+		}
 	}
 
 	public static Direction convDir(String s) {
@@ -92,7 +56,7 @@ public class Main {
 	}
 
 	public static Cell convCell(String s) {
-		return Cell.get((int) s.charAt(0) - (int) 'A' + 1, Integer
+		return new Cell((int) s.charAt(0) - (int) 'A' + 1, Integer
 				.parseInt(Character.toString(s.charAt(1))));
 	}
 

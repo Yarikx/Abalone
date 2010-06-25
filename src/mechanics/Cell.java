@@ -4,23 +4,12 @@ public class Cell {
 
 	private int row;
 	private int column;
-	private static Cell[][] cellStorage = new Cell[12][12];
 
-	static void init() {
-		for (int i = 0; i < 12; i++)
-			for (int j = 0; j < 12; j++)
-				cellStorage[i][j] = new Cell(i, j);
-	}
-
-	private Cell(int newRow, int newColumn) {
+	public Cell(int newRow, int newColumn) {
 		row = newRow;
 		column = newColumn;
 	}
 
-	public static Cell get(int row, int column) {
-		return cellStorage[row][column];
-	}
-	
 	public int getRow() {
 		return row;
 	}
@@ -30,48 +19,32 @@ public class Cell {
 	}
 
 	public Cell shift(Direction d) {
-//		int newRow = row;
-//		int newColumn = column;
-//		switch (d) {
-//		case NorthWest:
-//			newRow--;
-//			newColumn--;
-//			break;
-//		case North:
-//			newRow--;
-//			break;
-//		case East:
-//			newColumn++;
-//			break;
-//		case SouthEast:
-//			newRow++;
-//			newColumn++;
-//			break;
-//		case South:
-//			newRow++;
-//			break;
-//		case West:
-//			newColumn--;
-//			break;
-//		default:
-//		}
-//		return cellStorage[newRow][newColumn];
+		int newRow = row;
+		int newColumn = column;
 		switch (d) {
 		case NorthWest:
-			return cellStorage[row-1][column-1];
+			newRow--;
+			newColumn--;
+			break;
 		case North:
-			return cellStorage[row-1][column];
+			newRow--;
+			break;
 		case East:
-			return cellStorage[row][column+1];
+			newColumn++;
+			break;
 		case SouthEast:
-			return cellStorage[row+1][column+1];
+			newRow++;
+			newColumn++;
+			break;
 		case South:
-			return cellStorage[row+1][column];
+			newRow++;
+			break;
 		case West:
-			return cellStorage[row][column-1];
+			newColumn--;
+			break;
 		default:
-			return cellStorage[row][column];
 		}
+		return new Cell(newRow, newColumn);
 	}
 
 	public boolean onAnyLine(Cell c) {
