@@ -44,12 +44,12 @@ public class Ann implements ArtificialIntilligence {
 		return list;
 	}
 
-
-	private double evalPosition(Board b, byte side, int steps,
-			double alphabeta) {
+	private double evaluatePosition(Board b, byte side, int steps, double alphabeta) {
 		if (steps == 0) {
-			double sum = 4 * (b.getMarblesCaptured(Board.oppositeSide(side)) - b
-					.getMarblesCaptured(side)) + Math.random()*0.000001;
+			double sum = 4
+					* (b.getMarblesCaptured(Board.oppositeSide(side)) - b
+							.getMarblesCaptured(side)) + Math.random()
+					* 0.000001;
 			for (Cell c : b.getAllMarbles()) {
 				if (b.getState(c) == side)
 					sum += 1 / (c.findDistance(center) + 1.0);
@@ -70,29 +70,61 @@ public class Ann implements ArtificialIntilligence {
 					if (f[i][j] == side) {
 						for (Direction d : Direction.getSecondary()) {
 							stack = 1;
-							shifted1 = Cell.get(i,j).shift(d);
+							shifted1 = Cell.get(i, j).shift(d);
 							state = b.getState(shifted1);
 							if (state == Layout.N) {
-								
-							} else
-							if (state == side) {
+								// TODO Moveone
+							} else if (state == side) {
 								shifted2 = shifted1.shift(d);
 								state = b.getState(shifted2);
 								if (state == Layout.N || state == Layout.E) {
-									//TODO Silentpush 2 
+									// TODO Silentpush 2
 								} else if (state == Board.oppositeSide(side)) {
-									//TODO Enemypush 3
+									// TODO Enemypush 1
 								} else {
-									
+									shifted3 = shifted2.shift(d);
+									state = b.getState(shifted2);
+									if (state == Layout.N || state == Layout.E) {
+										// TODO Silentpush 3
+									} else if (state == Board.oppositeSide(side)) {
+										// TODO Enemypush 2
+									}
 								}
 							}
-								
-							futureBoard = b.clone();
-							futureBoard.makeMove(m);
+						}
+						for (Direction d : Direction.getPrimary()) {
+							stack = 1;
+							shifted1 = Cell.get(i, j).shift(d);
+							state = b.getState(shifted1);
+							if (state == Layout.N) {
+								// TODO Moveone
+							} else if (state == side) {
+								shifted2 = shifted1.shift(d);
+								state = b.getState(shifted2);
+								if (state == Layout.N || state == Layout.E) {
+									// TODO Silentpush 2
+								} else if (state == Board.oppositeSide(side)) {
+									// TODO Enemypush 1
+								} else {
+									shifted3 = shifted2.shift(d);
+									state = b.getState(shifted2);
+									if (state == Layout.N || state == Layout.E) {
+										// TODO Silentpush 3
+									} else if (state == Board.oppositeSide(side)) {
+										// TODO Enemypush 2
+									}
+									for (Direction md : Direction.getNotDirection(d)) {
+										//TODO Leap
+									}
+								}
+								for (Direction md : Direction.getNotDirection(d)) {
+									//TODO Leap
+								}
+							}
 						}
 					}
 				}
-			
+
 			for (Move m : getAllPossibleMoves(b, side)) {
 				futureBoard = b.clone();
 				futureBoard.makeMove(m);
@@ -111,34 +143,34 @@ public class Ann implements ArtificialIntilligence {
 		}
 	}
 
-	private double evaluatePosition(Board b, byte side, int steps,
-			double alphabeta) {
-		if (steps == 0) {
-			return 10
-					* (b.getMarblesCaptured(side) - b
-							.getMarblesCaptured(Board.oppositeSide(side))) + Math.random()
-					* 0.000001 + b.evaluatePosition(side);
-		} else {
-			Board futureBoard;
-			Move bestMove = null;
-			double currValue, bestValue = Double.POSITIVE_INFINITY, ab = alphabeta;
-			for (Move m : getAllPossibleMoves(b, side)) {
-				futureBoard = b.clone();
-				futureBoard.makeMove(m);
-				currValue = evaluatePosition(futureBoard, Board
-						.oppositeSide(side), steps - 1, ab);
-				if (currValue < bestValue) {
-					bestValue = currValue;
-					bestMove = m;
-					// if (alphabeta > bestValue)
-					// break;
-					ab = bestValue;
-				}
-			}
-			this.bestMove = bestMove;
-			return -bestValue;
-		}
-	}
+//	private double evaluatePosition(Board b, byte side, int steps,
+//			double alphabeta) {
+//		if (steps == 0) {
+//			return 10
+//					* (b.getMarblesCaptured(side) - b.getMarblesCaptured(Board
+//							.oppositeSide(side))) + Math.random() * 0.000001
+//					+ b.evaluatePosition(side);
+//		} else {
+//			Board futureBoard;
+//			Move bestMove = null;
+//			double currValue, bestValue = Double.POSITIVE_INFINITY, ab = alphabeta;
+//			for (Move m : getAllPossibleMoves(b, side)) {
+//				futureBoard = b.clone();
+//				futureBoard.makeMove(m);
+//				currValue = evaluatePosition(futureBoard, Board
+//						.oppositeSide(side), steps - 1, ab);
+//				if (currValue < bestValue) {
+//					bestValue = currValue;
+//					bestMove = m;
+//					// if (alphabeta > bestValue)
+//					// break;
+//					ab = bestValue;
+//				}
+//			}
+//			this.bestMove = bestMove;
+//			return -bestValue;
+//		}
+//	}
 
 	public Move findNextMove(Board b, byte side, int steps) {
 		evaluatePosition(b, side, steps, Double.NEGATIVE_INFINITY);
