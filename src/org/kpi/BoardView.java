@@ -258,9 +258,11 @@ public class BoardView extends View implements Player, Watcher {
 				// if selected
 			} else {
 				if (e.getAction() == MotionEvent.ACTION_DOWN) {
+
 					currentMoveType = board.getMoveType(new Move(selectedGroup,
 							getDirection(e.getX(), e.getY()), game.getSide()));
 					highlight = true;
+
 				} else if (e.getAction() == MotionEvent.ACTION_MOVE) {
 
 					currentMoveType = board.getMoveType(new Move(selectedGroup,
@@ -268,28 +270,34 @@ public class BoardView extends View implements Player, Watcher {
 
 				} else if (e.getAction() == MotionEvent.ACTION_UP) {
 					highlight = false;
-					Move move = new Move(selectedGroup, getDirection(e.getX(),
-							e.getY()), game.getSide());
-
-					MoveType moveType = board.getMoveType(move);
-					if (moveType.getResult() != MoveType.NOMOVE) {
-						resultMove = move;
-						synchronized (monitor) {
-							monitor.notify();
-						}
-						Log.d("group", "moved");
-						// board.makeMove(move);
-						// Log.d("input", "move");
-						// selected = false;
-						// drawBoard(board);
-						moveRequested = false;
+					if (selectedGroup
+							.isCellInGroup(getCell(e.getX(), e.getY()))) {
 						selected = false;
 						selectionStarted = false;
 					} else {
-						// moveRequested = true;
-						// TODO notification
-						Log.d("group", "NOMOVE");
+						Move move = new Move(selectedGroup, getDirection(
+								e.getX(), e.getY()), game.getSide());
 
+						MoveType moveType = board.getMoveType(move);
+						if (moveType.getResult() != MoveType.NOMOVE) {
+							resultMove = move;
+							synchronized (monitor) {
+								monitor.notify();
+							}
+							Log.d("group", "moved");
+							// board.makeMove(move);
+							// Log.d("input", "move");
+							// selected = false;
+							// drawBoard(board);
+							moveRequested = false;
+							selected = false;
+							selectionStarted = false;
+						} else {
+							// moveRequested = true;
+							// TODO notification
+							Log.d("group", "NOMOVE");
+
+						}
 					}
 
 				}

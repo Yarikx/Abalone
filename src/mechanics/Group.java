@@ -124,7 +124,7 @@ public class Group {
 	
 	public boolean isCellInGroup(Cell c) {
 		for (int i = 0; i < length; i++) {
-			if (cells[0].equals(c))
+			if (cells[i].equals(c))
 				return true;
 		}
 		return false;
