@@ -47,15 +47,10 @@ public class Ann implements ArtificialIntilligence {
 	private double evaluatePosition(Board b, byte side, int steps,
 			double alphabeta) {
 		if (steps == 0) {
-			double sum = 4 * (b.getMarblesCaptured(Board.oppositeSide(side)) - b
-					.getMarblesCaptured(side)) + Math.random()*0.000001;
-			for (Cell c : b.getAllMarbles()) {
-				if (b.getState(c) == side)
-					sum += 1 / (c.findDistance(center) + 1.0);
-				else
-					sum -= 1 / (c.findDistance(center) + 1.0);
-			}
-			return sum;
+			return 10
+					* (b.getMarblesCaptured(side) - b
+							.getMarblesCaptured(Board.oppositeSide(side))) + Math.random()
+					* 0.000001 + b.evaluatePosition(side);
 		} else {
 			Board futureBoard;
 			Move bestMove = null;
@@ -68,8 +63,8 @@ public class Ann implements ArtificialIntilligence {
 				if (currValue < bestValue) {
 					bestValue = currValue;
 					bestMove = m;
-//					if (alphabeta > bestValue)
-//						break;
+					// if (alphabeta > bestValue)
+					// break;
 					ab = bestValue;
 				}
 			}
