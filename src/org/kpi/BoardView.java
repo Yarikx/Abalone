@@ -24,7 +24,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.TextView;
 
 public class BoardView extends View implements Player, Watcher {
 
@@ -62,6 +61,7 @@ public class BoardView extends View implements Player, Watcher {
 	ArrayList<Ball> balls;
 
 	private float ballSize;
+	private Game game;
 
 	public BoardView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -221,7 +221,7 @@ public class BoardView extends View implements Player, Watcher {
 					selectionStarted = false;
 					Log.d("input", "group " + selectedGroup.toString());
 
-					if (selectedGroup.isValid()) {
+					if (board.isValid(selectedGroup, game.getSide())) {
 						selected = true;
 						Log.d("group", "group is valid");
 						// TODO notification
@@ -462,5 +462,11 @@ public class BoardView extends View implements Player, Watcher {
 		
 		
 		return t;
+	}
+
+	public void setGame(Game game) {
+		this.game = game;
+		drawBoard(game.getBoard());
+		
 	}
 }
