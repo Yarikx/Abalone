@@ -34,6 +34,10 @@ public class Board implements Cloneable {
 		return row < 5 ? row + 4 : 9;
 	}
 
+	public byte[][] getField() {
+		return field;
+	}
+	
 	public byte getState(Cell c) {
 		return field[c.getRow()][c.getColumn()];
 	}

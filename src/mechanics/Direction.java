@@ -4,6 +4,9 @@ public enum Direction {
 
 	NorthWest, North, East, West, South, SouthEast;
 	
+	private static Direction[] primary = {East};
+	private static Direction[] secondary = {};
+	
 	public static Direction convert(int value) {
 		return Direction.class.getEnumConstants()[value];
 	}

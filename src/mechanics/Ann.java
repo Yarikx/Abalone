@@ -44,6 +44,56 @@ public class Ann implements ArtificialIntilligence {
 		return list;
 	}
 
+
+	private double evalPosition(Board b, byte side, int steps,
+			double alphabeta) {
+		if (steps == 0) {
+			double sum = 4 * (b.getMarblesCaptured(Board.oppositeSide(side)) - b
+					.getMarblesCaptured(side)) + Math.random()*0.000001;
+			for (Cell c : b.getAllMarbles()) {
+				if (b.getState(c) == side)
+					sum += 1 / (c.findDistance(center) + 1.0);
+				else
+					sum -= 1 / (c.findDistance(center) + 1.0);
+			}
+			return sum;
+		} else {
+			Board futureBoard;
+			Move bestMove = null;
+			double currValue, bestValue = Double.POSITIVE_INFINITY, ab = alphabeta;
+			int stack;
+			byte[][] f = b.getField();
+			for (int i = 0; i < 11; i++)
+				for (int j = 0; j < 11; j++) {
+					if (f[i][j] == side) {
+						for (Direction d : Direction.values()) {
+							stack = 1;
+							if (b.getState(Cell.get(i,j).shift(d)) == side)
+							
+							futureBoard = b.clone();
+							futureBoard.makeMove(m);
+						}
+					}
+				}
+			
+			for (Move m : getAllPossibleMoves(b, side)) {
+				futureBoard = b.clone();
+				futureBoard.makeMove(m);
+				currValue = evaluatePosition(futureBoard, Board
+						.oppositeSide(side), steps - 1, ab);
+				if (currValue < bestValue) {
+					bestValue = currValue;
+					bestMove = m;
+					if (alphabeta > bestValue)
+						break;
+					ab = bestValue;
+				}
+			}
+			this.bestMove = bestMove;
+			return -bestValue;
+		}
+	}
+
 	private double evaluatePosition(Board b, byte side, int steps,
 			double alphabeta) {
 		if (steps == 0) {
