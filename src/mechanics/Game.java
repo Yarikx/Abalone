@@ -24,7 +24,7 @@ public class Game {
 
 	public void start() {
 		int i = 0;
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		//BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		System.out.println(board);
 		Move move = null;
 		while (board.getMarblesCaptured(Board.WHITE) < 6
@@ -41,12 +41,12 @@ public class Game {
 			board.makeMove(move);
 			if (watcher != null){
 				watcher.updateView();
-			try {
-				br.readLine();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+//			try {
+//				br.readLine();
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
 			
 			}
 			currentSide = Board.oppositeSide(currentSide);

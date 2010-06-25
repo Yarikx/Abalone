@@ -15,7 +15,9 @@ import mechanics.MoveType;
 import mechanics.Player;
 import mechanics.Watcher;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -28,9 +30,9 @@ import android.view.View;
 public class BoardView extends View implements Player, Watcher {
 
 	static final float borderSize = 10;
-	static final float SQRT3_2 = (float) Math.sqrt(3) / 2f;
-	// FIXME get real size
-	int size = 320;
+	static final float SQRT3_2 = (float) Math.sqrt(3) / 2f,
+			PROP = (8 * SQRT3_2 + 1f) / 9f;
+	int size = 0;
 	Paint defaultPaint, blackP, whiteP, emptyP, highlightedP, selectedP;
 	private Board board;
 	boolean animation = false;
@@ -38,14 +40,13 @@ public class BoardView extends View implements Player, Watcher {
 	boolean selected = false, selectionStarted = false, moveRequested = false;
 	Cell startCell;
 	Group selectedGroup;
-	PointF testCircle = null;
 
 	// getMove
 	Object monitor;
 	Move resultMove;
 	// animation
 	List<Ball> emptyBalls, animBals;
-	final static int T = 50, time = 1000, N = time / T;
+	final static int T = 30, time = 500, N = time / T;
 	// highlight
 	boolean highlight = false;
 
@@ -98,6 +99,7 @@ public class BoardView extends View implements Player, Watcher {
 		selectedP = new Paint(Paint.ANTI_ALIAS_FLAG);
 		selectedP.setColor(Color.GREEN);
 		selectedP.setAlpha(100);
+
 	}
 
 	private int measure(int measureSpec) {
@@ -115,6 +117,7 @@ public class BoardView extends View implements Player, Watcher {
 			// always return the full available bounds.
 			result = specSize;
 		}
+		Log.d("screen", "result=" + result);
 		return result;
 	}
 
@@ -123,10 +126,21 @@ public class BoardView extends View implements Player, Watcher {
 		int measuredWidth = measure(widthMeasureSpec);
 		int measuredHeight = measure(heightMeasureSpec);
 
-		int d = Math.min(measuredWidth, measuredHeight);
+		// (size - 2 * borderSize - 2 * (1 - SQRT3_2) * ballSize)*SQRT3_2+2 *
+		// borderSize)
 
-		setMeasuredDimension(d, d);
-		size = d;
+		// int d = (int) Math.min((measuredWidth-2*borderSize)*PROP,
+		// measuredHeight);
+
+		if ((measuredWidth - 2 * borderSize) * PROP + 2 * borderSize < measuredHeight) {
+			measuredHeight = (int) (((measuredWidth - 2 * borderSize) * PROP)+2*borderSize);
+
+		} else {
+			measuredWidth = (int) (((measuredHeight - 2 * borderSize) / PROP)+2*borderSize);
+		}
+		Log.d("screen", measuredWidth+"x"+measuredHeight);
+		setMeasuredDimension(measuredWidth, measuredHeight);
+		size = measuredWidth;
 	}
 
 	@Override
@@ -149,6 +163,23 @@ public class BoardView extends View implements Player, Watcher {
 			}
 		}
 
+		// TODO delete
+		Log.d("draw", "refresh anim=" + animation + " " + animBals);
+
+		if (animation) {
+			for (Ball ball : emptyBalls) {
+
+				drawBall(ball, canvas);
+
+			}
+			for (Ball ball : animBals) {
+
+				drawBall(ball, canvas);
+
+			}
+
+		}
+
 		if (selectionStarted) {
 			if (currentGroup != null) {
 				drawSelected(currentGroup, canvas);
@@ -169,24 +200,6 @@ public class BoardView extends View implements Player, Watcher {
 			}
 		}
 
-		if (animation) {
-			for (Ball ball : emptyBalls) {
-
-				drawBall(ball, canvas);
-
-			}
-			for (Ball ball : animBals) {
-
-				drawBall(ball, canvas);
-
-			}
-
-		}
-
-		if (testCircle != null) {
-			canvas.drawCircle(testCircle.x, testCircle.y, 2 * ballSize,
-					defaultPaint);
-		}
 	}
 
 	private void drawBall(Ball ball, Canvas canvas) {
@@ -221,13 +234,24 @@ public class BoardView extends View implements Player, Watcher {
 		}
 	}
 
+	@Override
+	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+		// TODO Auto-generated method stub
+		super.onSizeChanged(w, h, oldw, oldh);
+
+		measure(MeasureSpec.AT_MOST);
+		//size = h;
+		drawBoard();
+		Log.d("screen", "screen changed " + h + " " + w);
+	}
+
 	public void drawBoard(Board board) {
 		// invalidate();
 		this.board = board;
+		Log.d("screen", getHeight() + "");
+		Log.d("screen", getMeasuredHeight() + "");
 
 		balls = new ArrayList<Ball>();
-		// FIXME get real size
-		// size = 320;
 		ballSize = ((float) size - 2 * borderSize) / 9f;
 		for (int i = 1; i <= 9; i++) {
 			float shift = (5f - i) * ballSize / 2f;
@@ -242,17 +266,25 @@ public class BoardView extends View implements Player, Watcher {
 				}
 			}
 		}
-		animation=false;
+
+		// postInvalidate();
+		animation = false;
+		animBals = emptyBalls = null;
 		postInvalidate();
+		// (new Thread(new Runnable() {
+		//
+		// @Override
+		// public void run() {
+		// postInvalidate();
+		//
+		// }
+		// },"postInvalidateThread")).start();
 	}
 
 	@Override
 	public boolean onTouchEvent(MotionEvent e) {
-		// if (e.getAction() == MotionEvent.ACTION_DOWN){
-		Cell cell = getCell(e.getX(), e.getY());
-		testCircle = getPointByCell(cell);
+
 		postInvalidate();
-		// }
 		if (moveRequested) {
 			if (!selected) {
 				if (e.getAction() == MotionEvent.ACTION_DOWN) {
@@ -271,12 +303,13 @@ public class BoardView extends View implements Player, Watcher {
 							e.getY()));
 
 					selectionStarted = false;
+					currentGroup = null;
 					Log.d("input", "group " + selectedGroup.toString());
 
 					if (board.isValid(selectedGroup, game.getSide())) {
 						selected = true;
 						Log.d("group", "group is valid");
-						
+
 					} else {
 						Log.d("group", "group is not valid");
 						selectedGroup = null;
@@ -488,7 +521,7 @@ public class BoardView extends View implements Player, Watcher {
 
 		animation = true;
 
-		postInvalidate();
+		// postInvalidate();
 
 		for (int i = 0; i < N; i++) {
 			for (Ball ball : animBals) {
@@ -504,8 +537,12 @@ public class BoardView extends View implements Player, Watcher {
 				e.printStackTrace();
 			}
 		}
-		postInvalidate();
-
+		try {
+			Thread.sleep(100);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	// private void out(String out){
@@ -531,6 +568,12 @@ public class BoardView extends View implements Player, Watcher {
 	public void setGame(Game game) {
 		this.game = game;
 		drawBoard(game.getBoard());
+
+	}
+
+	public void screenChanged() {
+
+		drawBoard();
 
 	}
 }
