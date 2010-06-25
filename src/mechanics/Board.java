@@ -46,7 +46,7 @@ public class Board implements Cloneable {
 	}
 	
 	public boolean isValid(Group g, byte side) {
-		if (!g.onAnyLine() || g.lineLength() > 3)
+		if ((!g.onAnyLine() && !g.atom()) || g.lineLength() > 3)
 			return false;
 		for (Cell c : g.getCells()) {
 			if (getState(c) != side)
