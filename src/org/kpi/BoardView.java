@@ -20,7 +20,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
-import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -32,7 +31,7 @@ public class BoardView extends View implements Player, Watcher {
 	static final float SQRT3_2 = (float) Math.sqrt(3) / 2f;
 	// FIXME get real size
 	int size = 320;
-	Paint defaultPaint, blackP, whiteP, emptyP, highlightedP;
+	Paint defaultPaint, blackP, whiteP, emptyP, highlightedP, selectedP;
 	private Board board;
 	boolean animation = false;
 
@@ -66,6 +65,7 @@ public class BoardView extends View implements Player, Watcher {
 	private float ballSize;
 	private Game game;
 	private MoveType currentMoveType;
+	private Group currentGroup;
 
 	public BoardView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -94,6 +94,10 @@ public class BoardView extends View implements Player, Watcher {
 		highlightedP = new Paint(Paint.ANTI_ALIAS_FLAG);
 		highlightedP.setColor(Color.RED);
 		highlightedP.setAlpha(100);
+
+		selectedP = new Paint(Paint.ANTI_ALIAS_FLAG);
+		selectedP.setColor(Color.GREEN);
+		selectedP.setAlpha(100);
 	}
 
 	private int measure(int measureSpec) {
@@ -142,6 +146,17 @@ public class BoardView extends View implements Player, Watcher {
 
 				drawBall(ball, canvas);
 
+			}
+		}
+
+		if (selectionStarted) {
+			if (currentGroup != null) {
+				drawSelected(currentGroup, canvas);
+			}
+		}
+		if (selected) {
+			if (selectedGroup != null) {
+				drawSelected(selectedGroup, canvas);
 			}
 		}
 
@@ -198,6 +213,14 @@ public class BoardView extends View implements Player, Watcher {
 		}
 	}
 
+	private void drawSelected(Group hGroup, Canvas canvas) {
+		PointF p;
+		for (Cell cell : hGroup.getCells()) {
+			p = getPointByCell(cell);
+			canvas.drawCircle(p.x, p.y, 0.6f * ballSize, selectedP);
+		}
+	}
+
 	public void drawBoard(Board board) {
 		// invalidate();
 		this.board = board;
@@ -219,7 +242,7 @@ public class BoardView extends View implements Player, Watcher {
 				}
 			}
 		}
-
+		animation=false;
 		postInvalidate();
 	}
 
@@ -237,7 +260,11 @@ public class BoardView extends View implements Player, Watcher {
 					Log.d("input", "startCell " + startCell.toString());
 					selectionStarted = true;
 				} else if (e.getAction() == MotionEvent.ACTION_MOVE) {
-
+					currentGroup = new Group(startCell, getCell(e.getX(),
+							e.getY()));
+					if (!board.isValid(currentGroup, game.getSide())) {
+						currentGroup = null;
+					}
 				} else if (e.getAction() == MotionEvent.ACTION_UP
 						&& selectionStarted) {
 					selectedGroup = new Group(startCell, getCell(e.getX(),
@@ -249,10 +276,11 @@ public class BoardView extends View implements Player, Watcher {
 					if (board.isValid(selectedGroup, game.getSide())) {
 						selected = true;
 						Log.d("group", "group is valid");
-						// TODO notification
+						
 					} else {
 						Log.d("group", "group is not valid");
 						selectedGroup = null;
+						// TODO notification
 					}
 				}
 				// if selected
@@ -476,8 +504,7 @@ public class BoardView extends View implements Player, Watcher {
 				e.printStackTrace();
 			}
 		}
-
-		animation = false;
+		postInvalidate();
 
 	}
 
