@@ -9,14 +9,16 @@ public class MoveType {
 	
 	private int result;
 	private Group cells;
+	private Group highlightedCells;
 	
 	public MoveType(int result) {
-		this(result,null);
+		this(result,null,null);
 	}
 	
-	public MoveType(int result, Group group) {
+	public MoveType(int result, Group group, Group highGroup) {
 		this.result = result;
 		cells = group;
+		highlightedCells = highGroup;
 	}
 	
 	
@@ -26,6 +28,10 @@ public class MoveType {
 	
 	public Group getMovedCells() {
 		return cells;
+	}
+	
+	public Group getHighlightedCells() {
+		return highlightedCells;
 	}
 	
 }

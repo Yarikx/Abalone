@@ -14,13 +14,13 @@ import mechanics.Move;
 import mechanics.MoveType;
 import mechanics.Player;
 import mechanics.Watcher;
-import android.R.anim;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
+import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -32,7 +32,7 @@ public class BoardView extends View implements Player, Watcher {
 	static final float SQRT3_2 = (float) Math.sqrt(3) / 2f;
 	// FIXME get real size
 	int size = 320;
-	Paint defaultPaint, blackP, whiteP, emptyP;
+	Paint defaultPaint, blackP, whiteP, emptyP, highlightedP;
 	private Board board;
 	boolean animation = false;
 
@@ -40,13 +40,16 @@ public class BoardView extends View implements Player, Watcher {
 	Cell startCell;
 	Group selectedGroup;
 	PointF testCircle = null;
-	
-	//getMove
+
+	// getMove
 	Object monitor;
 	Move resultMove;
-	//animation
-	List<Ball> emptyBalls,animBals;
-	final static int T=50,time = 1000,N=time/T;
+	// animation
+	List<Ball> emptyBalls, animBals;
+	final static int T = 50, time = 1000, N = time / T;
+	// highlight
+	boolean highlight = false;
+
 	class Ball {
 		float x, y;
 		int state;
@@ -61,6 +64,8 @@ public class BoardView extends View implements Player, Watcher {
 	ArrayList<Ball> balls;
 
 	private float ballSize;
+	private Game game;
+	private MoveType currentMoveType;
 
 	public BoardView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -76,6 +81,7 @@ public class BoardView extends View implements Player, Watcher {
 		setFocusable(true);
 		monitor = new Object();
 		Resources r = getResources();
+		// TODO move to xml
 		defaultPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		defaultPaint.setColor(r.getColor(R.color.defaultColor));
 		blackP = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -85,6 +91,9 @@ public class BoardView extends View implements Player, Watcher {
 		whiteP.setColor(Color.WHITE);
 		emptyP = new Paint(Paint.ANTI_ALIAS_FLAG);
 		emptyP.setColor(Color.GRAY);
+		highlightedP = new Paint(Paint.ANTI_ALIAS_FLAG);
+		highlightedP.setColor(Color.RED);
+		highlightedP.setAlpha(100);
 	}
 
 	private int measure(int measureSpec) {
@@ -135,8 +144,17 @@ public class BoardView extends View implements Player, Watcher {
 
 			}
 		}
-		
-		if(animation){
+
+		if (highlight) {
+			Group highlitedCells = currentMoveType.getHighlightedCells();
+			if (highlitedCells != null) {
+				drawHighlight(highlitedCells, canvas);
+			} else {
+				drawHighlight(selectedGroup, canvas);
+			}
+		}
+
+		if (animation) {
 			for (Ball ball : emptyBalls) {
 
 				drawBall(ball, canvas);
@@ -147,7 +165,7 @@ public class BoardView extends View implements Player, Watcher {
 				drawBall(ball, canvas);
 
 			}
-			
+
 		}
 
 		if (testCircle != null) {
@@ -170,6 +188,14 @@ public class BoardView extends View implements Player, Watcher {
 			break;
 		}
 		canvas.drawCircle(ball.x, ball.y, ballSize / 2f, curPaint);
+	}
+
+	private void drawHighlight(Group hGroup, Canvas canvas) {
+		PointF p;
+		for (Cell cell : hGroup.getCells()) {
+			p = getPointByCell(cell);
+			canvas.drawCircle(p.x, p.y, 0.6f * ballSize, highlightedP);
+		}
 	}
 
 	public void drawBoard(Board board) {
@@ -214,27 +240,59 @@ public class BoardView extends View implements Player, Watcher {
 
 				} else if (e.getAction() == MotionEvent.ACTION_UP
 						&& selectionStarted) {
-					selectedGroup = new Group(startCell, getCell(e.getX(), e
-							.getY()));
-					selected = true;
+					selectedGroup = new Group(startCell, getCell(e.getX(),
+							e.getY()));
+
 					selectionStarted = false;
 					Log.d("input", "group " + selectedGroup.toString());
-				}
-			} else {
-				Move move = new Move(selectedGroup, Direction.North,
-						Board.BLACK);
 
-				MoveType moveType = board.getMoveType(move);
-				resultMove = move;
-				synchronized (monitor) {
-					monitor.notify();
+					if (board.isValid(selectedGroup, game.getSide())) {
+						selected = true;
+						Log.d("group", "group is valid");
+						// TODO notification
+					} else {
+						Log.d("group", "group is not valid");
+						selectedGroup = null;
+					}
 				}
-				selected = false;
-				moveRequested = false;
-				// board.makeMove(move);
-				// Log.d("input", "move");
-				// selected = false;
-				// drawBoard(board);
+				// if selected
+			} else {
+				if (e.getAction() == MotionEvent.ACTION_DOWN) {
+					currentMoveType = board.getMoveType(new Move(selectedGroup,
+							getDirection(e.getX(), e.getY()), game.getSide()));
+					highlight = true;
+				} else if (e.getAction() == MotionEvent.ACTION_MOVE) {
+
+					currentMoveType = board.getMoveType(new Move(selectedGroup,
+							getDirection(e.getX(), e.getY()), game.getSide()));
+
+				} else if (e.getAction() == MotionEvent.ACTION_UP) {
+					highlight = false;
+					Move move = new Move(selectedGroup, getDirection(e.getX(),
+							e.getY()), game.getSide());
+
+					MoveType moveType = board.getMoveType(move);
+					if (moveType.getResult() != MoveType.NOMOVE) {
+						resultMove = move;
+						synchronized (monitor) {
+							monitor.notify();
+						}
+						Log.d("group", "moved");
+						// board.makeMove(move);
+						// Log.d("input", "move");
+						// selected = false;
+						// drawBoard(board);
+						moveRequested = false;
+						selected = false;
+						selectionStarted = false;
+					} else {
+						// moveRequested = true;
+						// TODO notification
+						Log.d("group", "NOMOVE");
+
+					}
+
+				}
 
 			}
 		} else {
@@ -250,6 +308,47 @@ public class BoardView extends View implements Player, Watcher {
 			// })).start();
 		}
 		return true;
+	}
+
+	Direction getDirection(float x, float y) {
+		PointF tempPoint = getCentrPointOfSelectedGroup();
+		double angle = Math.atan((y - tempPoint.y) / (x - tempPoint.x));
+
+		if (x - tempPoint.x < 0) {
+
+			angle = Math.PI + angle;
+
+		} else if ((y - tempPoint.y < 0)) {
+			angle += Math.PI * 2;
+		}
+		double tAngle = angle + Math.PI / 6d;
+		if (tAngle >= 2 * Math.PI) {
+			tAngle -= 2 * Math.PI;
+		}
+		int t = (int) (tAngle / (Math.PI / 3d));
+		Direction d = null;
+		switch (t) {
+		case 0:
+			d = Direction.East;
+			break;
+		case 1:
+			d = Direction.SouthEast;
+			break;
+		case 2:
+			d = Direction.South;
+			break;
+		case 3:
+			d = Direction.West;
+			break;
+		case 4:
+			d = Direction.NorthWest;
+			break;
+		case 5:
+			d = Direction.North;
+			break;
+		}
+		Log.d("input", "angle = " + angle / Math.PI * 180 + " t=" + t + " " + d);
+		return d;
 	}
 
 	public PointF getPointByCell(Cell cell) {
@@ -329,38 +428,38 @@ public class BoardView extends View implements Player, Watcher {
 		if (direction == Direction.East) {
 			angle = 0;
 		} else if (direction == Direction.SouthEast) {
-			angle = PI/3d;
+			angle = PI / 3d;
 		} else if (direction == Direction.South) {
-			angle = 2d*PI/3d;
+			angle = 2d * PI / 3d;
 		} else if (direction == Direction.West) {
 			angle = PI;
 		} else if (direction == Direction.NorthWest) {
-			angle = -2d*PI/3d;
+			angle = -2d * PI / 3d;
 		} else if (direction == Direction.North) {
-			angle = -PI/3d;
+			angle = -PI / 3d;
 		}
-		
+
 		emptyBalls = new LinkedList<Ball>();
 		animBals = new LinkedList<Ball>();
-		for(Cell cell:moveType.getMovedCells().getCells()){
-			float x,y;
+		for (Cell cell : moveType.getMovedCells().getCells()) {
+			float x, y;
 			PointF point = getPointByCell(cell);
 			x = point.x;
 			y = point.y;
 			emptyBalls.add(new Ball(x, y, Layout.E));
 			animBals.add(new Ball(x, y, board.getState(cell)));
 		}
-		
+
 		animation = true;
-		
+
 		postInvalidate();
-		
-		for(int i=0;i<N;i++){
-			for(Ball ball:animBals){
-				ball.x+=(1d/(double)N)*Math.cos(angle)*ballSize;
-				ball.y+=(1d/(double)N)*Math.sin(angle)*ballSize;
+
+		for (int i = 0; i < N; i++) {
+			for (Ball ball : animBals) {
+				ball.x += (1d / (double) N) * Math.cos(angle) * ballSize;
+				ball.y += (1d / (double) N) * Math.sin(angle) * ballSize;
 			}
-			
+
 			postInvalidate();
 			try {
 				Thread.sleep(T);
@@ -369,11 +468,34 @@ public class BoardView extends View implements Player, Watcher {
 				e.printStackTrace();
 			}
 		}
-		
-		
-		
+
 		animation = false;
-		
-		
+
+	}
+
+	// private void out(String out){
+	// TextView tw = (TextView) findViewById(R.id.tempOut);
+	// tw.setText(out);
+	// }
+	//
+
+	public PointF getCentrPointOfSelectedGroup() {
+		PointF t = getPointByCell(selectedGroup.getFirstEnd());
+		float x1 = t.x;
+		float y1 = t.y;
+
+		t = getPointByCell(selectedGroup.getSecondEnd());
+		float x2 = t.x;
+		float y2 = t.y;
+
+		t = new PointF((x1 + x2) / 2f, (y1 + y2) / 2f);
+
+		return t;
+	}
+
+	public void setGame(Game game) {
+		this.game = game;
+		drawBoard(game.getBoard());
+
 	}
 }

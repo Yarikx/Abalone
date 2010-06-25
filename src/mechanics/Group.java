@@ -75,10 +75,6 @@ public class Group {
 		return cells[0].onLine(cells[length - 1], d);
 	}
 
-	public static boolean isValid(Cell start, Cell end) {
-		return (start.onAnyLine(end) && cellsInRange(start, end)< 3);
-	}
-
 	public String toString() {
 		if (atom()) {
 			return cells[0].toString();
@@ -87,6 +83,10 @@ public class Group {
 		}
 	}
 
+	public boolean onAnyLine() {
+		return cells[0].onAnyLine(cells[length - 1]);
+	}
+	
 	public Cell getPeak(Direction d) {
 		Cell cell;
 		switch (d) {
@@ -120,6 +120,14 @@ public class Group {
 			cell = null;
 		}
 		return cell;
+	}
+	
+	public boolean isCellInGroup(Cell c) {
+		for (int i = 0; i < length; i++) {
+			if (cells[0].equals(c))
+				return true;
+		}
+		return false;
 	}
 
 }
