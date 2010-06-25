@@ -44,7 +44,8 @@ public class Ann implements ArtificialIntilligence {
 		return list;
 	}
 
-	private double evaluatePosition(Board b, byte side, int steps, double alphabeta) {
+	private double evaluatePosition(Board b, byte side, int steps,
+			double alphabeta) {
 		if (steps == 0) {
 			double sum = 4
 					* (b.getMarblesCaptured(Board.oppositeSide(side)) - b
@@ -59,73 +60,139 @@ public class Ann implements ArtificialIntilligence {
 			return sum;
 		} else {
 			Board futureBoard;
-			Move bestMove = null;
+			Move bestMove, m = null;
 			double currValue, bestValue = Double.POSITIVE_INFINITY, ab = alphabeta;
-			Cell shifted1, shifted2, shifted3;
+			Cell original, shifted1, shifted2, shifted3, shifted4;
 			int stack;
-			byte state;
+			byte state1, state2, state3, state4, state5;
+			byte oppSide = Board.oppositeSide(side);
 			byte[][] f = b.getField();
 			for (int i = 0; i < 11; i++)
 				for (int j = 0; j < 11; j++) {
 					if (f[i][j] == side) {
 						for (Direction d : Direction.getSecondary()) {
-							stack = 1;
-							shifted1 = Cell.get(i, j).shift(d);
-							state = b.getState(shifted1);
-							if (state == Layout.N) {
-								// TODO Moveone
-							} else if (state == side) {
+							original = Cell.get(i, j);
+							shifted1 = original.shift(d);
+							state1 = b.getState(shifted1);
+							if (state1 == Layout.E) {
+								futureBoard = b.clone();
+								m = new Move(new Group(original),d,side);
+								futureBoard.makeMove(m);
+								currValue = evaluatePosition(futureBoard, oppSide, steps - 1, ab);
+								if (currValue < bestValue) {
+									bestValue = currValue;
+									bestMove = m;
+									if (alphabeta > bestValue)
+										break;
+									ab = bestValue;
+								}
+							} 
+							else if (state1 == side) {
 								shifted2 = shifted1.shift(d);
-								state = b.getState(shifted2);
-								if (state == Layout.N || state == Layout.E) {
-									// TODO Silentpush 2
-								} else if (state == Board.oppositeSide(side)) {
-									// TODO Enemypush 1
+								state2 = b.getState(shifted2);
+								shifted3 = shifted2.shift(d);
+								state3 = b.getState(shifted3);
+								if (state2 == Layout.E || (state2 == oppSide && (state3 == Layout.N || state3 == Layout.E))) {
+									futureBoard = b.clone();
+									m = new Move(new Group(original,shifted1),d,side);
+									futureBoard.makeMove(m);
+									currValue = evaluatePosition(futureBoard, oppSide, steps - 1, ab);
+									if (currValue < bestValue) {
+										bestValue = currValue;
+										bestMove = m;
+										if (alphabeta > bestValue)
+											break;
+										ab = bestValue;
+									}
 								} else {
-									shifted3 = shifted2.shift(d);
-									state = b.getState(shifted2);
-									if (state == Layout.N || state == Layout.E) {
-										// TODO Silentpush 3
-									} else if (state == Board.oppositeSide(side)) {
-										// TODO Enemypush 2
+									shifted4 = shifted3.shift(d);
+									state4 = b.getState(shifted4);
+									state5 = b.getState(shifted4.shift(d));
+									if (state3 == Layout.E || (state3 == oppSide && state4 == oppSide && (state5 == Layout.N || state5 == Layout.E))) {
+										futureBoard = b.clone();
+										m = new Move(new Group(original,shifted2),d,side);
+										futureBoard.makeMove(m);
+										currValue = evaluatePosition(futureBoard, Board
+												.oppositeSide(side), steps - 1, ab);
+										if (currValue < bestValue) {
+											bestValue = currValue;
+											bestMove = m;
+											if (alphabeta > bestValue)
+												break;
+											ab = bestValue;
+										}
 									}
 								}
 							}
 						}
 						for (Direction d : Direction.getPrimary()) {
-							stack = 1;
-							shifted1 = Cell.get(i, j).shift(d);
-							state = b.getState(shifted1);
-							if (state == Layout.N) {
-								// TODO Moveone
-							} else if (state == side) {
+							original = Cell.get(i, j);
+							shifted1 = original.shift(d);
+							state1 = b.getState(shifted1);
+							if (state1 == Layout.E) {
+								futureBoard = b.clone();
+								m = new Move(new Group(original),d,side);
+								futureBoard.makeMove(m);
+								currValue = evaluatePosition(futureBoard, oppSide, steps - 1, ab);
+								if (currValue < bestValue) {
+									bestValue = currValue;
+									bestMove = m;
+									if (alphabeta > bestValue)
+										break;
+									ab = bestValue;
+								}
+							} 
+							else if (state1 == side) {
 								shifted2 = shifted1.shift(d);
-								state = b.getState(shifted2);
-								if (state == Layout.N || state == Layout.E) {
-									// TODO Silentpush 2
-								} else if (state == Board.oppositeSide(side)) {
-									// TODO Enemypush 1
+								state2 = b.getState(shifted2);
+								shifted3 = shifted2.shift(d);
+								state3 = b.getState(shifted3);
+								if (state2 == Layout.E || (state2 == oppSide && (state3 == Layout.N || state3 == Layout.E))) {
+									futureBoard = b.clone();
+									m = new Move(new Group(original,shifted1),d,side);
+									futureBoard.makeMove(m);
+									currValue = evaluatePosition(futureBoard, oppSide, steps - 1, ab);
+									if (currValue < bestValue) {
+										bestValue = currValue;
+										bestMove = m;
+										if (alphabeta > bestValue)
+											break;
+										ab = bestValue;
+									}
 								} else {
-									shifted3 = shifted2.shift(d);
-									state = b.getState(shifted2);
-									if (state == Layout.N || state == Layout.E) {
-										// TODO Silentpush 3
-									} else if (state == Board.oppositeSide(side)) {
-										// TODO Enemypush 2
+									shifted4 = shifted3.shift(d);
+									state4 = b.getState(shifted4);
+									state5 = b.getState(shifted4.shift(d));
+									if (state3 == Layout.E || (state3 == oppSide && state4 == oppSide && (state5 == Layout.N || state5 == Layout.E))) {
+										futureBoard = b.clone();
+										m = new Move(new Group(original,shifted2),d,side);
+										futureBoard.makeMove(m);
+										currValue = evaluatePosition(futureBoard, Board
+												.oppositeSide(side), steps - 1, ab);
+										if (currValue < bestValue) {
+											bestValue = currValue;
+											bestMove = m;
+											if (alphabeta > bestValue)
+												break;
+											ab = bestValue;
+										}
 									}
 									for (Direction md : Direction.getNotDirection(d)) {
-										//TODO Leap
+										if (b.getState(original.shift(md)) == Layout.N && b.getState(shifted1.shift(md)) == Layout.N || b.getState(shifted2.shift(md)) == Layout.N) {
+											// TODO Leap 2
+										}
 									}
 								}
 								for (Direction md : Direction.getNotDirection(d)) {
-									//TODO Leap
+									if (b.getState(original.shift(md)) == Layout.N && b.getState(shifted1.shift(md)) == Layout.N) {
+										// TODO Leap 3
+									}
 								}
-							}
 						}
 					}
 				}
 
-			for (Move m : getAllPossibleMoves(b, side)) {
+			for (Move mv : getAllPossibleMoves(b, side)) {
 				futureBoard = b.clone();
 				futureBoard.makeMove(m);
 				currValue = evaluatePosition(futureBoard, Board
@@ -143,34 +210,34 @@ public class Ann implements ArtificialIntilligence {
 		}
 	}
 
-//	private double evaluatePosition(Board b, byte side, int steps,
-//			double alphabeta) {
-//		if (steps == 0) {
-//			return 10
-//					* (b.getMarblesCaptured(side) - b.getMarblesCaptured(Board
-//							.oppositeSide(side))) + Math.random() * 0.000001
-//					+ b.evaluatePosition(side);
-//		} else {
-//			Board futureBoard;
-//			Move bestMove = null;
-//			double currValue, bestValue = Double.POSITIVE_INFINITY, ab = alphabeta;
-//			for (Move m : getAllPossibleMoves(b, side)) {
-//				futureBoard = b.clone();
-//				futureBoard.makeMove(m);
-//				currValue = evaluatePosition(futureBoard, Board
-//						.oppositeSide(side), steps - 1, ab);
-//				if (currValue < bestValue) {
-//					bestValue = currValue;
-//					bestMove = m;
-//					// if (alphabeta > bestValue)
-//					// break;
-//					ab = bestValue;
-//				}
-//			}
-//			this.bestMove = bestMove;
-//			return -bestValue;
-//		}
-//	}
+	// private double evaluatePosition(Board b, byte side, int steps,
+	// double alphabeta) {
+	// if (steps == 0) {
+	// return 10
+	// * (b.getMarblesCaptured(side) - b.getMarblesCaptured(Board
+	// .oppositeSide(side))) + Math.random() * 0.000001
+	// + b.evaluatePosition(side);
+	// } else {
+	// Board futureBoard;
+	// Move bestMove = null;
+	// double currValue, bestValue = Double.POSITIVE_INFINITY, ab = alphabeta;
+	// for (Move m : getAllPossibleMoves(b, side)) {
+	// futureBoard = b.clone();
+	// futureBoard.makeMove(m);
+	// currValue = evaluatePosition(futureBoard, Board
+	// .oppositeSide(side), steps - 1, ab);
+	// if (currValue < bestValue) {
+	// bestValue = currValue;
+	// bestMove = m;
+	// // if (alphabeta > bestValue)
+	// // break;
+	// ab = bestValue;
+	// }
+	// }
+	// this.bestMove = bestMove;
+	// return -bestValue;
+	// }
+	// }
 
 	public Move findNextMove(Board b, byte side, int steps) {
 		evaluatePosition(b, side, steps, Double.NEGATIVE_INFINITY);
