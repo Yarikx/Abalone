@@ -63,13 +63,13 @@ public class Board implements Cloneable {
 				result = false;
 		}
 		if (result == true)
-			return new MoveType(MoveType.LEAP, m.getSource());
+			return new MoveType(MoveType.LEAP, m.getSource(), m.getDestination());
 		// If move is a pushing move...
 		if (m.isPushing()) {
 			Direction d = m.getDirection();
 			// ...check if it is a silent pushing move
 			if (getState(m.getPeak().shift(d)) == Layout.E)
-				return new MoveType(MoveType.SILENTPUSH, m.getSource());
+				return new MoveType(MoveType.SILENTPUSH, m.getSource(), m.getDestination());
 			int nCell = getState(m.getPeak().shift(d));
 			if (nCell == Layout.N)
 				return new MoveType(MoveType.NOMOVE);
@@ -78,14 +78,14 @@ public class Board implements Cloneable {
 			if (nCell == enemyMarble
 					&& (nnCell == Layout.E || nnCell == Layout.N))
 				return new MoveType(MoveType.ENEMYPUSH, new Group(m.getTail(),
-						m.getPeak().shift(d)));
+						m.getPeak().shift(d)), m.getDestination());
 			if (nnCell == Layout.N || m.getSource().lineLength() == 2)
 				return new MoveType(MoveType.NOMOVE);
 			int nnnCell = getState(m.getPeak().shift(d).shift(d).shift(d));
 			if (nCell == enemyMarble && nnCell == enemyMarble
 					&& (nnnCell == Layout.E || nnnCell == Layout.N))
 				return new MoveType(MoveType.ENEMYPUSH, new Group(m.getTail(),
-						m.getPeak().shift(d).shift(d)));
+						m.getPeak().shift(d).shift(d)), m.getDestination());
 		}
 		return new MoveType(MoveType.NOMOVE);
 	}
