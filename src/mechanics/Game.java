@@ -37,6 +37,7 @@ public class Game {
 			if(watcher!=null){
 				watcher.doAnimation(board.getMoveType(move),move.getDirection());
 			}
+			
 			board.makeMove(move);
 			if (watcher != null){
 				watcher.updateView();

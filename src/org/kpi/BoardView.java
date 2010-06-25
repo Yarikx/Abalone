@@ -44,7 +44,6 @@ public class BoardView extends View implements Player, Watcher {
 	// getMove
 	Object monitor;
 	Move resultMove;
-	PointF tapPoint;
 	// animation
 	List<Ball> emptyBalls, animBals;
 	final static int T = 50, time = 1000, N = time / T;
@@ -230,7 +229,6 @@ public class BoardView extends View implements Player, Watcher {
 						Log.d("group", "group is not valid");
 						selectedGroup = null;
 					}
-					tapPoint = getPointByCell(startCell);
 				}
 				// if selected
 			} else {
@@ -284,13 +282,14 @@ public class BoardView extends View implements Player, Watcher {
 	}
 
 	Direction getDirection(float x, float y) {
-		double angle = Math.atan((y - tapPoint.y) / (x - tapPoint.x));
+		PointF tempPoint = getCentrPointOfSelectedGroup();
+		double angle = Math.atan((y - tempPoint.y) / (x - tempPoint.x));
 
-		if (x - tapPoint.x < 0) {
+		if (x - tempPoint.x < 0) {
 
 			angle = Math.PI + angle;
 
-		} else if ((y - tapPoint.y < 0)) {
+		} else if ((y - tempPoint.y < 0)) {
 			angle += Math.PI * 2;
 		}
 		double tAngle = angle + Math.PI / 6d;
@@ -444,8 +443,24 @@ public class BoardView extends View implements Player, Watcher {
 		animation = false;
 
 	}
-	private void out(String out){
-		TextView tw = (TextView) findViewById(R.id.tempOut);
-		tw.setText(out);
+//	private void out(String out){
+//		TextView tw = (TextView) findViewById(R.id.tempOut);
+//		tw.setText(out);
+//	}
+//	
+
+	public PointF getCentrPointOfSelectedGroup(){
+		PointF t = getPointByCell(selectedGroup.getFirstEnd());
+		float x1 = t.x;
+		float y1 = t.y;
+		
+		t = getPointByCell(selectedGroup.getSecondEnd());
+		float x2 = t.x;
+		float y2 = t.y;
+		
+		t = new PointF((x1+x2)/2f, (y1+y2)/2f);
+		
+		
+		return t;
 	}
 }

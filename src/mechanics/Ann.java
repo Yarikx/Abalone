@@ -30,7 +30,7 @@ public class Ann implements ArtificialIntilligence {
 		return list;
 	}
 
-	private List<Move> getAllPossibleMoves(Board b, byte side) {
+	public List<Move> getAllPossibleMoves(Board b, byte side) {
 		List<Move> list = new ArrayList<Move>();
 		for (Group group : getAllGroups(b, side)) {
 			for (Direction d : Direction.values()) {
