@@ -18,7 +18,8 @@ public class GameActivity extends Activity {
 		// bw.drawBoard(board);
 		final Game game = new Game(new ClassicLayout(), Board.BLACK, bw,
 				new Ann(), bw);
-		bw.drawBoard(game.getBoard());
+		bw.setGame(game);
+		//bw.drawBoard(game.getBoard());
 		(new Thread(new Runnable() {
 
 			@Override
