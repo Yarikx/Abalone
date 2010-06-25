@@ -24,6 +24,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.TextView;
 
 public class BoardView extends View implements Player, Watcher {
 
@@ -43,6 +44,7 @@ public class BoardView extends View implements Player, Watcher {
 	// getMove
 	Object monitor;
 	Move resultMove;
+	PointF tapPoint;
 	// animation
 	List<Ball> emptyBalls, animBals;
 	final static int T = 50, time = 1000, N = time / T;
@@ -211,11 +213,11 @@ public class BoardView extends View implements Player, Watcher {
 					Log.d("input", "startCell " + startCell.toString());
 					selectionStarted = true;
 				} else if (e.getAction() == MotionEvent.ACTION_MOVE) {
-
+	
 				} else if (e.getAction() == MotionEvent.ACTION_UP
 						&& selectionStarted) {
-					selectedGroup = new Group(startCell, getCell(e.getX(), e
-							.getY()));
+					selectedGroup = new Group(startCell, getCell(e.getX(),
+							e.getY()));
 
 					selectionStarted = false;
 					Log.d("input", "group " + selectedGroup.toString());
@@ -224,20 +226,23 @@ public class BoardView extends View implements Player, Watcher {
 						selected = true;
 						Log.d("group", "group is valid");
 						// TODO notification
-					}else{
+					} else {
 						Log.d("group", "group is not valid");
 						selectedGroup = null;
 					}
+					tapPoint = getPointByCell(startCell);
 				}
 				// if selected
 			} else {
 				if (e.getAction() == MotionEvent.ACTION_DOWN) {
-
+					//tapPoint = new PointF(e.getX(), e.getY());
 				} else if (e.getAction() == MotionEvent.ACTION_MOVE) {
 
+					//out(getDirection(e.getX(), e.getY()).toString());
+
 				} else if (e.getAction() == MotionEvent.ACTION_UP) {
-					Move move = new Move(selectedGroup, Direction.North,
-							Board.BLACK);
+					Move move = new Move(selectedGroup, getDirection(e.getX(),
+							e.getY()), Board.BLACK);
 
 					MoveType moveType = board.getMoveType(move);
 					if (moveType.getResult() != MoveType.NOMOVE) {
@@ -254,9 +259,9 @@ public class BoardView extends View implements Player, Watcher {
 						selected = false;
 						selectionStarted = false;
 					} else {
-						//moveRequested = true;
+						// moveRequested = true;
 						Log.d("group", "NOMOVE");
-						//TODO delete 
+						// TODO delete
 						selected = false;
 					}
 
@@ -276,6 +281,46 @@ public class BoardView extends View implements Player, Watcher {
 			// })).start();
 		}
 		return true;
+	}
+
+	Direction getDirection(float x, float y) {
+		double angle = Math.atan((y - tapPoint.y) / (x - tapPoint.x));
+
+		if (x - tapPoint.x < 0) {
+
+			angle = Math.PI + angle;
+
+		} else if ((y - tapPoint.y < 0)) {
+			angle += Math.PI * 2;
+		}
+		double tAngle = angle + Math.PI / 6d;
+		if (tAngle >= 2 * Math.PI) {
+			tAngle -= 2 * Math.PI;
+		}
+		int t = (int) (tAngle / (Math.PI / 3d));
+		Direction d = null;
+		switch (t) {
+		case 0:
+			d = Direction.East;
+			break;
+		case 1:
+			d = Direction.SouthEast;
+			break;
+		case 2:
+			d = Direction.South;
+			break;
+		case 3:
+			d = Direction.West;
+			break;
+		case 4:
+			d = Direction.NorthWest;
+			break;
+		case 5:
+			d = Direction.North;
+			break;
+		}
+		Log.d("input", "angle = " + angle / Math.PI * 180 + " t=" + t + " " + d);
+		return d;
 	}
 
 	public PointF getPointByCell(Cell cell) {
@@ -398,5 +443,9 @@ public class BoardView extends View implements Player, Watcher {
 
 		animation = false;
 
+	}
+	private void out(String out){
+		TextView tw = (TextView) findViewById(R.id.tempOut);
+		tw.setText(out);
 	}
 }
