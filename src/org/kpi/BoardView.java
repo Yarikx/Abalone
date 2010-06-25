@@ -20,6 +20,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
+import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -31,7 +32,7 @@ public class BoardView extends View implements Player, Watcher {
 	static final float SQRT3_2 = (float) Math.sqrt(3) / 2f;
 	// FIXME get real size
 	int size = 320;
-	Paint defaultPaint, blackP, whiteP, emptyP;
+	Paint defaultPaint, blackP, whiteP, emptyP, highlightedP;
 	private Board board;
 	boolean animation = false;
 
@@ -46,6 +47,8 @@ public class BoardView extends View implements Player, Watcher {
 	// animation
 	List<Ball> emptyBalls, animBals;
 	final static int T = 50, time = 1000, N = time / T;
+	// highlight
+	boolean highlight = false;
 
 	class Ball {
 		float x, y;
@@ -62,6 +65,7 @@ public class BoardView extends View implements Player, Watcher {
 
 	private float ballSize;
 	private Game game;
+	private MoveType currentMoveType;
 
 	public BoardView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -77,6 +81,7 @@ public class BoardView extends View implements Player, Watcher {
 		setFocusable(true);
 		monitor = new Object();
 		Resources r = getResources();
+		// TODO move to xml
 		defaultPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		defaultPaint.setColor(r.getColor(R.color.defaultColor));
 		blackP = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -86,6 +91,9 @@ public class BoardView extends View implements Player, Watcher {
 		whiteP.setColor(Color.WHITE);
 		emptyP = new Paint(Paint.ANTI_ALIAS_FLAG);
 		emptyP.setColor(Color.GRAY);
+		highlightedP = new Paint(Paint.ANTI_ALIAS_FLAG);
+		highlightedP.setColor(Color.RED);
+		highlightedP.setAlpha(100);
 	}
 
 	private int measure(int measureSpec) {
@@ -137,6 +145,15 @@ public class BoardView extends View implements Player, Watcher {
 			}
 		}
 
+		if (highlight) {
+			Group highlitedCells = currentMoveType.getHighlightedCells();
+			if (highlitedCells != null) {
+				drawHighlight(highlitedCells, canvas);
+			} else {
+				drawHighlight(selectedGroup, canvas);
+			}
+		}
+
 		if (animation) {
 			for (Ball ball : emptyBalls) {
 
@@ -171,6 +188,14 @@ public class BoardView extends View implements Player, Watcher {
 			break;
 		}
 		canvas.drawCircle(ball.x, ball.y, ballSize / 2f, curPaint);
+	}
+
+	private void drawHighlight(Group hGroup, Canvas canvas) {
+		PointF p;
+		for (Cell cell : hGroup.getCells()) {
+			p = getPointByCell(cell);
+			canvas.drawCircle(p.x, p.y, 0.6f * ballSize, highlightedP);
+		}
 	}
 
 	public void drawBoard(Board board) {
@@ -212,7 +237,7 @@ public class BoardView extends View implements Player, Watcher {
 					Log.d("input", "startCell " + startCell.toString());
 					selectionStarted = true;
 				} else if (e.getAction() == MotionEvent.ACTION_MOVE) {
-	
+
 				} else if (e.getAction() == MotionEvent.ACTION_UP
 						&& selectionStarted) {
 					selectedGroup = new Group(startCell, getCell(e.getX(),
@@ -233,14 +258,18 @@ public class BoardView extends View implements Player, Watcher {
 				// if selected
 			} else {
 				if (e.getAction() == MotionEvent.ACTION_DOWN) {
-					//tapPoint = new PointF(e.getX(), e.getY());
+					currentMoveType = board.getMoveType(new Move(selectedGroup,
+							getDirection(e.getX(), e.getY()), game.getSide()));
+					highlight = true;
 				} else if (e.getAction() == MotionEvent.ACTION_MOVE) {
 
-					//out(getDirection(e.getX(), e.getY()).toString());
+					currentMoveType = board.getMoveType(new Move(selectedGroup,
+							getDirection(e.getX(), e.getY()), game.getSide()));
 
 				} else if (e.getAction() == MotionEvent.ACTION_UP) {
+					highlight = false;
 					Move move = new Move(selectedGroup, getDirection(e.getX(),
-							e.getY()), Board.BLACK);
+							e.getY()), game.getSide());
 
 					MoveType moveType = board.getMoveType(move);
 					if (moveType.getResult() != MoveType.NOMOVE) {
@@ -258,9 +287,9 @@ public class BoardView extends View implements Player, Watcher {
 						selectionStarted = false;
 					} else {
 						// moveRequested = true;
+						// TODO notification
 						Log.d("group", "NOMOVE");
-						// TODO delete
-						selected = false;
+
 					}
 
 				}
@@ -443,30 +472,30 @@ public class BoardView extends View implements Player, Watcher {
 		animation = false;
 
 	}
-//	private void out(String out){
-//		TextView tw = (TextView) findViewById(R.id.tempOut);
-//		tw.setText(out);
-//	}
-//	
 
-	public PointF getCentrPointOfSelectedGroup(){
+	// private void out(String out){
+	// TextView tw = (TextView) findViewById(R.id.tempOut);
+	// tw.setText(out);
+	// }
+	//
+
+	public PointF getCentrPointOfSelectedGroup() {
 		PointF t = getPointByCell(selectedGroup.getFirstEnd());
 		float x1 = t.x;
 		float y1 = t.y;
-		
+
 		t = getPointByCell(selectedGroup.getSecondEnd());
 		float x2 = t.x;
 		float y2 = t.y;
-		
-		t = new PointF((x1+x2)/2f, (y1+y2)/2f);
-		
-		
+
+		t = new PointF((x1 + x2) / 2f, (y1 + y2) / 2f);
+
 		return t;
 	}
 
 	public void setGame(Game game) {
 		this.game = game;
 		drawBoard(game.getBoard());
-		
+
 	}
 }
