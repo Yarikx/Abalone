@@ -121,5 +121,13 @@ public class Group {
 		}
 		return cell;
 	}
+	
+	public boolean isCellInGroup(Cell c) {
+		for (int i = 0; i < length; i++) {
+			if (cells[0].equals(c))
+				return true;
+		}
+		return false;
+	}
 
 }

@@ -87,5 +87,9 @@ public class Cell {
 		return Character.toString((char) ((int) 'A' + row - 1))
 				+ Integer.toString(column);
 	}
+	
+	public boolean equals(Cell other) {
+		return (other.getRow() == row && other.getColumn() == column);
+	}
 
 }
