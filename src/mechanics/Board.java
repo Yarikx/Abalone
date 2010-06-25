@@ -44,6 +44,16 @@ public class Board implements Cloneable {
 	private void setState(Cell c, byte state) {
 		field[c.getRow()][c.getColumn()] = state;
 	}
+	
+	public boolean isValid(Group g, byte side) {
+		if (!g.onAnyLine() || g.lineLength() > 3)
+			return false;
+		for (Cell c : g.getCells()) {
+			if (getState(c) != side)
+				return false;
+		}
+		return true;
+	}
 
 	public MoveType getMoveType(Move m) {
 		// If move is a leap

@@ -87,6 +87,10 @@ public class Group {
 		}
 	}
 
+	public boolean onAnyLine() {
+		return cells[0].onAnyLine(cells[length - 1]);
+	}
+	
 	public Cell getPeak(Direction d) {
 		Cell cell;
 		switch (d) {
