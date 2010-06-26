@@ -133,12 +133,12 @@ public class BoardView extends View implements Player, Watcher {
 		// measuredHeight);
 
 		if ((measuredWidth - 2 * borderSize) * PROP + 2 * borderSize < measuredHeight) {
-			measuredHeight = (int) (((measuredWidth - 2 * borderSize) * PROP)+2*borderSize);
+			measuredHeight = (int) (((measuredWidth - 2 * borderSize) * PROP) + 2 * borderSize);
 
 		} else {
-			measuredWidth = (int) (((measuredHeight - 2 * borderSize) / PROP)+2*borderSize);
+			measuredWidth = (int) (((measuredHeight - 2 * borderSize) / PROP) + 2 * borderSize);
 		}
-		Log.d("screen", measuredWidth+"x"+measuredHeight);
+		Log.d("screen", measuredWidth + "x" + measuredHeight);
 		setMeasuredDimension(measuredWidth, measuredHeight);
 		size = measuredWidth;
 	}
@@ -240,7 +240,7 @@ public class BoardView extends View implements Player, Watcher {
 		super.onSizeChanged(w, h, oldw, oldh);
 
 		measure(MeasureSpec.AT_MOST);
-		//size = h;
+		// size = h;
 		drawBoard();
 		Log.d("screen", "screen changed " + h + " " + w);
 	}
@@ -292,27 +292,29 @@ public class BoardView extends View implements Player, Watcher {
 					Log.d("input", "startCell " + startCell.toString());
 					selectionStarted = true;
 				} else if (e.getAction() == MotionEvent.ACTION_MOVE) {
-					currentGroup = new Group(startCell, getCell(e.getX(),
-							e.getY()));
-					if (!board.isValid(currentGroup, game.getSide())) {
-						currentGroup = null;
-					}
+					currentGroup = board
+							.getUsableGroup(
+									startCell, getCell(e.getX(), e.getY()),
+									getDirectionFromCell(e.getX(), e.getY(),
+											startCell), game.getSide());
 				} else if (e.getAction() == MotionEvent.ACTION_UP
 						&& selectionStarted) {
-					selectedGroup = new Group(startCell, getCell(e.getX(),
-							e.getY()));
+					selectedGroup = board
+					.getUsableGroup(
+							startCell, getCell(e.getX(), e.getY()),
+							getDirectionFromCell(e.getX(), e.getY(),
+									startCell), game.getSide());
 
 					selectionStarted = false;
 					currentGroup = null;
-					Log.d("input", "group " + selectedGroup.toString());
+					//Log.d("input", "group " + selectedGroup.toString());
 
-					if (board.isValid(selectedGroup, game.getSide())) {
+					if (selectedGroup!=null) {
 						selected = true;
 						Log.d("group", "group is valid");
 
 					} else {
 						Log.d("group", "group is not valid");
-						selectedGroup = null;
 						// TODO notification
 					}
 				}
@@ -381,6 +383,47 @@ public class BoardView extends View implements Player, Watcher {
 
 	Direction getDirection(float x, float y) {
 		PointF tempPoint = getCentrPointOfSelectedGroup();
+		double angle = Math.atan((y - tempPoint.y) / (x - tempPoint.x));
+
+		if (x - tempPoint.x < 0) {
+
+			angle = Math.PI + angle;
+
+		} else if ((y - tempPoint.y < 0)) {
+			angle += Math.PI * 2;
+		}
+		double tAngle = angle + Math.PI / 6d;
+		if (tAngle >= 2 * Math.PI) {
+			tAngle -= 2 * Math.PI;
+		}
+		int t = (int) (tAngle / (Math.PI / 3d));
+		Direction d = null;
+		switch (t) {
+		case 0:
+			d = Direction.East;
+			break;
+		case 1:
+			d = Direction.SouthEast;
+			break;
+		case 2:
+			d = Direction.South;
+			break;
+		case 3:
+			d = Direction.West;
+			break;
+		case 4:
+			d = Direction.NorthWest;
+			break;
+		case 5:
+			d = Direction.North;
+			break;
+		}
+		Log.d("input", "angle = " + angle / Math.PI * 180 + " t=" + t + " " + d);
+		return d;
+	}
+
+	Direction getDirectionFromCell(float x, float y, Cell c) {
+		PointF tempPoint = getPointByCell(c);
 		double angle = Math.atan((y - tempPoint.y) / (x - tempPoint.x));
 
 		if (x - tempPoint.x < 0) {

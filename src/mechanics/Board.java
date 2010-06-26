@@ -44,16 +44,6 @@ public class Board implements Cloneable {
 	private void setState(Cell c, byte state) {
 		field[c.getRow()][c.getColumn()] = state;
 	}
-	
-	public boolean isValid(Group g, byte side) {
-		if ((!g.onAnyLine() && !g.atom()) || g.lineLength() > 3)
-			return false;
-		for (Cell c : g.getCells()) {
-			if (getState(c) != side)
-				return false;
-		}
-		return true;
-	}
 
 	public MoveType getMoveType(Move m) {
 		// If move is a leap
@@ -63,13 +53,15 @@ public class Board implements Cloneable {
 				result = false;
 		}
 		if (result == true)
-			return new MoveType(MoveType.LEAP, m.getSource(), m.getDestination());
+			return new MoveType(MoveType.LEAP, m.getSource(),
+					m.getDestination());
 		// If move is a pushing move...
 		if (m.isPushing()) {
 			Direction d = m.getDirection();
 			// ...check if it is a silent pushing move
 			if (getState(m.getPeak().shift(d)) == Layout.E)
-				return new MoveType(MoveType.SILENTPUSH, m.getSource(), m.getDestination());
+				return new MoveType(MoveType.SILENTPUSH, m.getSource(),
+						m.getDestination());
 			int nCell = getState(m.getPeak().shift(d));
 			if (nCell == Layout.N)
 				return new MoveType(MoveType.NOMOVE);
@@ -153,8 +145,8 @@ public class Board implements Cloneable {
 		List<Cell> list = new ArrayList<Cell>();
 		for (int i = 1; i <= 9; i++)
 			for (int j = getMinColumn(i); j <= getMaxColumn(i); j++)
-				if (getState(i,j) == WHITE || getState(i,j) == BLACK)
-					list.add(new Cell(i,j));
+				if (getState(i, j) == WHITE || getState(i, j) == BLACK)
+					list.add(new Cell(i, j));
 		return list;
 	}
 
@@ -162,8 +154,8 @@ public class Board implements Cloneable {
 		List<Cell> list = new ArrayList<Cell>();
 		for (int i = 1; i <= 9; i++)
 			for (int j = getMinColumn(i); j <= getMaxColumn(i); j++)
-				if (getState(i,j) == side)
-					list.add(new Cell(i,j));
+				if (getState(i, j) == side)
+					list.add(new Cell(i, j));
 		return list;
 	}
 
@@ -177,6 +169,21 @@ public class Board implements Cloneable {
 		b.whiteCaptured = whiteCaptured;
 		b.blackCaptured = blackCaptured;
 		return b;
+	}
+
+	public Group getUsableGroup(Cell start, Cell end, Direction d, byte side) {
+		if (getState(start) == side)
+			if (getState(start.shift(d)) == side
+					&& start.findDistance(end) >= 1)
+				if (getState(start.shift(d).shift(d)) == side
+						&& start.findDistance(end) >= 2)
+					return new Group(start, start.shift(d).shift(d));
+				else
+					return new Group(start, start.shift(d));
+			else
+				return new Group(start);
+		else
+			return null;
 	}
 
 	public static byte oppositeSide(byte side) {
