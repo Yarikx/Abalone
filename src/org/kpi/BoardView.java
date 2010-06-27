@@ -268,8 +268,9 @@ public class BoardView extends View implements Player, Watcher {
 		}
 
 		// postInvalidate();
-		animation = false;
 		animBals = emptyBalls = null;
+		animation = false;
+		
 		postInvalidate();
 		// (new Thread(new Runnable() {
 		//

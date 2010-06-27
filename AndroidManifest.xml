@@ -5,6 +5,13 @@
 
 		<activity android:name="GameActivity" android:label="@string/app_name">
 			<intent-filter>
+				<action android:name="org.kpi.abalone.MAINMENU" />
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+		</activity>
+		
+		<activity android:name="SplashAcitvity">
+			<intent-filter>
 				<category android:name= "android.intent.category.LAUNCHER"/>
 				<action android:name="android.intent.action.MAIN"/>
 			</intent-filter>
