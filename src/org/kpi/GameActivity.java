@@ -4,35 +4,49 @@ import mechanics.Ann;
 import mechanics.Board;
 import mechanics.ClassicLayout;
 import mechanics.Game;
+import mechanics.Player;
 import android.app.Activity;
-import android.content.res.Configuration;
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 public class GameActivity extends Activity {
 	private BoardView bw;
+	private Game game;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		
+		Intent intent = getIntent();
+		
 		setContentView(R.layout.main);
 		bw = (BoardView) findViewById(R.id.boardView);
-		// bw.drawBoard(board);
-		final Game game = new Game(new ClassicLayout(), Board.BLACK, bw,
-				new Ann(), bw);
-		bw.setGame(game);
-		//bw.drawBoard(game.getBoard());
-		(new Thread(new Runnable() {
+		
+		
+		if(intent.getAction().equals("org.kpi.abalone.GAME")){
+			
+			String sp = intent.getExtras().getString("vs");
+			
+			Player secondPlayer = sp.equals("cpu")?(new Ann()):bw;
+			game = new Game(new ClassicLayout(), Board.BLACK, bw,
+					secondPlayer, bw);
+			bw.setGame(game);
+			//bw.drawBoard(game.getBoard());
+			(new Thread(new Runnable() {
 
-			@Override
-			public void run() {
-				
-				game.start();
-			}
-		},"Game Thread")).start();
-		// game.start();
+				@Override
+				public void run() {
+					
+					game.start();
+				}
+			},"Game Thread")).start();
+		}
+		
+		
 
 	}
+	
+	
 	
 	
 	@Override

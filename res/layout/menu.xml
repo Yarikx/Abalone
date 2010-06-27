@@ -1,43 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:orientation="vertical" android:layout_width="fill_parent"
-	android:layout_height="fill_parent">
+	android:layout_height="fill_parent"
+	android:gravity="center">
 	
-	<LinearLayout 
-		android:orientation="horizontal"
-		android:weightSum="4"
+	<Button 
 		android:layout_width="fill_parent"
-		android:layout_height="fill_parent"
-		>
-		
-		
-		<Button android:layout_width="wrap_content" 
-				android:layout_height="wrap_content"
-				android:layout_weight="1"
-				android:text="b2"/>
-		<Button android:layout_width="wrap_content" 
-				android:layout_height="wrap_content"
-				android:layout_weight="1"
-				android:text="b2"/>
-		<Button android:layout_width="wrap_content" 
-				android:layout_height="wrap_content"
-				android:layout_weight="1"
-				android:text="b2"/>
-				
-		<Button android:layout_width="wrap_content" 
-				android:layout_height="wrap_content"
-				android:layout_weight="1"
-				android:text="b2"/>
-		
-		
-		
-		</LinearLayout>
+		android:layout_height="wrap_content"
+		android:text="@string/new_game_vs_human"
+		android:id="@+id/n_game_human"/>
+	<Button 
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/new_game_vs_cpu"
+		android:id="@+id/n_game_cpu"/>
+	
 	
 
-	
-			<Button android:layout_width="fill_parent" 
-				android:layout_height="fill_parent"
-				android:text="b2"/>
-	
-	
 </LinearLayout>

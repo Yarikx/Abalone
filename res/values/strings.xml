@@ -2,4 +2,11 @@
 <resources>
     <string name="hello">Hello World, Hello!</string>
     <string name="app_name">Abalone</string>
+    <string name="new_game">New Game</string>
+    <string name="resume_game">Resume Game</string>
+    <string name="vs_cpu">vs CPU</string>
+    <string name="vs_human">vs Human</string>
+    <string name="new_game_vs_human">New Game vs Human</string>
+    <string name="new_game_vs_cpu">New Game vs CPU </string>
+    
 </resources>

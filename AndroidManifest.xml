@@ -3,9 +3,9 @@
 	android:versionCode="1" android:versionName="1.0" package="org.kpi">
 	<application android:icon="@drawable/icon" android:label="@string/app_name">
 
-		<activity android:name="GameActivity" android:label="@string/app_name">
+		<activity android:name="GameActivity" android:label="@string/app_name" android:screenOrientation="portrait">
 			<intent-filter>
-				<action android:name="org.kpi.abalone.MAINMENU" />
+				<action android:name="org.kpi.abalone.GAME" />
 				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>
 		</activity>
@@ -14,6 +14,13 @@
 			<intent-filter>
 				<category android:name= "android.intent.category.LAUNCHER"/>
 				<action android:name="android.intent.action.MAIN"/>
+			</intent-filter>
+		</activity>
+		
+		<activity android:name="MainMenuActivity">
+			<intent-filter>
+				<action android:name="org.kpi.abalone.MAINMENU" />
+				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>
 		</activity>
 	</application>
