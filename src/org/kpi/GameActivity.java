@@ -29,7 +29,7 @@ public class GameActivity extends Activity {
 		
 		setContentView(R.layout.main);
 		bw = (BoardView) findViewById(R.id.boardView);
-		
+		bw.setParent(this);
 		
 		if(intent.getAction().equals("org.kpi.abalone.GAME")){
 			
@@ -66,7 +66,6 @@ public class GameActivity extends Activity {
 		
 		super.onCreate(savedInstanceState);
 		
-
 	}
 
 

@@ -8,5 +8,9 @@
     <string name="vs_human">vs Human</string>
     <string name="new_game_vs_human">New Game vs Human</string>
     <string name="new_game_vs_cpu">New Game vs CPU </string>
+    <string name="black">Black</string>
+    <string name="white">White</string>
+    <string name="wins">wins</string>
+    <string name="game_over">Game Over</string>
     
 </resources>

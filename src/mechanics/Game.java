@@ -54,8 +54,8 @@ public class Game {
 		// InputStreamReader(System.in));
 		System.out.println(board);
 		Move move = null;
-		while (board.getMarblesCaptured(Board.WHITE) < 6
-				&& board.getMarblesCaptured(Board.BLACK) < 6) {
+		while (board.getMarblesCaptured(Board.WHITE) < 1
+				&& board.getMarblesCaptured(Board.BLACK) < 1) {
 			if (currentSide == Board.BLACK) {
 				move = blacksPlayer.requestMove(this);
 			} else {
@@ -82,6 +82,11 @@ public class Game {
 			System.out.println(i++ + ". "
 					+ board.getMarblesCaptured(Board.WHITE) + ":"
 					+ board.getMarblesCaptured(Board.BLACK));
+		}
+		if(board.getMarblesCaptured(Board.WHITE) >= 1){
+			watcher.win(Board.WHITE);
+		}else{
+			watcher.win(Board.BLACK);
 		}
 	}
 

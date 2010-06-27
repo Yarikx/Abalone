@@ -30,6 +30,8 @@ public final class R {
     }
     public static final class string {
         public static final int app_name=0x7f050001;
+        public static final int black=0x7f050008;
+        public static final int game_over=0x7f05000b;
         public static final int hello=0x7f050000;
         public static final int new_game=0x7f050002;
         public static final int new_game_vs_cpu=0x7f050007;
@@ -37,5 +39,7 @@ public final class R {
         public static final int resume_game=0x7f050003;
         public static final int vs_cpu=0x7f050004;
         public static final int vs_human=0x7f050005;
+        public static final int white=0x7f050009;
+        public static final int wins=0x7f05000a;
     }
 }

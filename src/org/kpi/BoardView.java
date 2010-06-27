@@ -14,14 +14,17 @@ import mechanics.Move;
 import mechanics.MoveType;
 import mechanics.Player;
 import mechanics.Watcher;
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
-import android.content.res.Configuration;
+import android.content.DialogInterface;
 import android.content.res.Resources;
-import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -33,6 +36,12 @@ public class BoardView extends View implements Player, Watcher {
 	static final float SQRT3_2 = (float) Math.sqrt(3) / 2f,
 			PROP = (8 * SQRT3_2 + 1f) / 9f;
 	int size = 0;
+	private Activity parent;
+
+	public void setParent(Activity parent) {
+		this.parent = parent;
+	}
+
 	Paint defaultPaint, blackP, whiteP, emptyP, highlightedP, selectedP;
 	private Board board;
 	boolean animation = false;
@@ -270,7 +279,7 @@ public class BoardView extends View implements Player, Watcher {
 		// postInvalidate();
 		animBals = emptyBalls = null;
 		animation = false;
-		
+
 		postInvalidate();
 		// (new Thread(new Runnable() {
 		//
@@ -295,22 +304,24 @@ public class BoardView extends View implements Player, Watcher {
 				} else if (e.getAction() == MotionEvent.ACTION_MOVE) {
 					currentGroup = board
 							.getUsableGroup(
-									startCell, getCell(e.getX(), e.getY()),
+									startCell,
+									getCell(e.getX(), e.getY()),
 									getDirectionFromCell(e.getX(), e.getY(),
 											startCell), game.getSide());
 				} else if (e.getAction() == MotionEvent.ACTION_UP
 						&& selectionStarted) {
 					selectedGroup = board
-					.getUsableGroup(
-							startCell, getCell(e.getX(), e.getY()),
-							getDirectionFromCell(e.getX(), e.getY(),
-									startCell), game.getSide());
+							.getUsableGroup(
+									startCell,
+									getCell(e.getX(), e.getY()),
+									getDirectionFromCell(e.getX(), e.getY(),
+											startCell), game.getSide());
 
 					selectionStarted = false;
 					currentGroup = null;
-					//Log.d("input", "group " + selectedGroup.toString());
+					// Log.d("input", "group " + selectedGroup.toString());
 
-					if (selectedGroup!=null) {
+					if (selectedGroup != null) {
 						selected = true;
 						Log.d("group", "group is valid");
 
@@ -612,12 +623,40 @@ public class BoardView extends View implements Player, Watcher {
 	public void setGame(Game game) {
 		this.game = game;
 		drawBoard(game.getBoard());
+		
 
 	}
 
 	public void screenChanged() {
 
 		drawBoard();
+
+	}
+
+	@Override
+	public void win(byte side) {
+		final Resources r = getResources();
+
+		final String sideString = (side == Board.BLACK) ? r.getString(R.string.black) : r
+				.getString(R.string.white);
+		
+		
+		parent.runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				
+				new AlertDialog.Builder(getContext())
+				.setMessage(sideString+" "+r.getString(R.string.wins))
+				.setTitle(r.getString(R.string.game_over))
+				.setCancelable(false)
+				.setNeutralButton("Ok", null)
+				.show();
+				
+			}
+		});
+		
+		
 
 	}
 }
