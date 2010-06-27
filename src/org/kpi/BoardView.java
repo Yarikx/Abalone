@@ -17,14 +17,14 @@ import mechanics.Watcher;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
-import android.os.Handler;
-import android.os.Looper;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -55,9 +55,11 @@ public class BoardView extends View implements Player, Watcher {
 	Move resultMove;
 	// animation
 	List<Ball> emptyBalls, animBals;
-	final static int T = 30, time = 500, N = time / T;
+	final static int T = 15, time = 500, N = time / T;
 	// highlight
 	boolean highlight = false;
+
+	Drawable blackBall,whiteBall,emptyBall;
 
 	class Ball {
 		float x, y;
@@ -91,6 +93,9 @@ public class BoardView extends View implements Player, Watcher {
 		setFocusable(true);
 		monitor = new Object();
 		Resources r = getResources();
+		blackBall = getResources().getDrawable(R.drawable.black_ball);
+		whiteBall = getResources().getDrawable(R.drawable.white_ball);
+		emptyBall = getResources().getDrawable(R.drawable.hole);
 		// TODO move to xml
 		defaultPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		defaultPaint.setColor(r.getColor(R.color.defaultColor));
@@ -212,19 +217,28 @@ public class BoardView extends View implements Player, Watcher {
 	}
 
 	private void drawBall(Ball ball, Canvas canvas) {
-		Paint curPaint = null;
+
+		Rect dst = new Rect((int) (ball.x - ballSize / 2),
+				(int) (ball.y - ballSize / 2), (int) (ball.x + ballSize / 2),
+				(int) (ball.y + ballSize / 2));
+		
+
 		switch (ball.state) {
 		case Layout.B:
-			curPaint = blackP;
+			blackBall.setBounds(dst);
+			blackBall.draw(canvas);
 			break;
 		case Layout.W:
-			curPaint = whiteP;
+			whiteBall.setBounds(dst);
+			whiteBall.draw(canvas);
 			break;
 		case Layout.E:
-			curPaint = emptyP;
+			emptyBall.setBounds(dst);
+			emptyBall.draw(canvas);
+			//canvas.drawCircle(ball.x, ball.y, ballSize / 2f, curPaint);
 			break;
 		}
-		canvas.drawCircle(ball.x, ball.y, ballSize / 2f, curPaint);
+		
 	}
 
 	private void drawHighlight(Group hGroup, Canvas canvas) {
@@ -623,7 +637,6 @@ public class BoardView extends View implements Player, Watcher {
 	public void setGame(Game game) {
 		this.game = game;
 		drawBoard(game.getBoard());
-		
 
 	}
 
@@ -637,26 +650,23 @@ public class BoardView extends View implements Player, Watcher {
 	public void win(byte side) {
 		final Resources r = getResources();
 
-		final String sideString = (side == Board.BLACK) ? r.getString(R.string.black) : r
-				.getString(R.string.white);
-		
-		
+		final String sideString = (side == Board.BLACK) ? r
+				.getString(R.string.black) : r.getString(R.string.white);
+
 		parent.runOnUiThread(new Runnable() {
-			
+
 			@Override
 			public void run() {
-				
+
 				new AlertDialog.Builder(getContext())
-				.setMessage(sideString+" "+r.getString(R.string.wins))
-				.setTitle(r.getString(R.string.game_over))
-				.setCancelable(false)
-				.setNeutralButton("Ok", null)
-				.show();
-				
+						.setMessage(
+								sideString + " " + r.getString(R.string.wins))
+						.setTitle(r.getString(R.string.game_over))
+						.setCancelable(false).setNeutralButton("Ok", null)
+						.show();
+
 			}
 		});
-		
-		
 
 	}
 }
