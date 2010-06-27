@@ -1,9 +1,10 @@
 package mechanics;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Board implements Cloneable {
+public class Board implements Cloneable,Serializable {
 
 	public static final byte WHITE = 2;
 	public static final byte BLACK = 3;

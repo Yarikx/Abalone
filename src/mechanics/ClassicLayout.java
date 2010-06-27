@@ -2,7 +2,7 @@ package mechanics;
 
 public class ClassicLayout extends Layout {
 
-	private static byte[][] start = { 
+	private byte[][] start = { 
 			{ N, N, N, N, N, N, N, N, N, N, N },
 			{ N, W, W, W, W, W, N, N, N, N, N }, // A
 			{ N, W, W, W, W, W, W, N, N, N, N }, // W

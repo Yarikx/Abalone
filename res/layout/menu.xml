@@ -14,6 +14,11 @@
 		android:layout_height="wrap_content"
 		android:text="@string/new_game_vs_cpu"
 		android:id="@+id/n_game_cpu"/>
+	<Button 
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/resume_game"
+		android:id="@+id/resume_game"/>
 	
 	
 

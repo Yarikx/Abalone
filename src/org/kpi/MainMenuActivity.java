@@ -21,8 +21,8 @@ public class MainMenuActivity extends Activity {
 			public void onClick(View v) {
 
 				Intent intent = new Intent("org.kpi.abalone.GAME");
-				//intent.getExtras().putString("side", "BLACK");
 				intent.putExtra("vs", "human");
+				intent.putExtra("type", "new");
 				startActivity(intent);
 
 			}
@@ -37,7 +37,22 @@ public class MainMenuActivity extends Activity {
 				Intent intent = new Intent("org.kpi.abalone.GAME");
 				//intent.getExtras().putString("side", "BLACK");
 				intent.putExtra("vs", "cpu");
+				intent.putExtra("type", "new");
 				startActivity(intent);
+
+			}
+		});
+		
+		Button resumeButton = (Button) findViewById(R.id.resume_game);
+		resumeButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				Intent intent = new Intent("org.kpi.abalone.RESUMEGAME");
+				intent.putExtra("type", "resume");
+				startActivity(intent);
+				
 
 			}
 		});
