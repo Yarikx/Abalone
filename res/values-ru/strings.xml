@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Hello World, Hello!</string>
+    <string name="app_name">Abalone</string>
+    <string name="new_game">Новая игра</string>
+    <string name="resume_game">Возобновить игру</string>
+    <string name="vs_cpu">с компьютера</string>
+    <string name="vs_human">с человеком</string>
+    <string name="new_game_vs_human">Новая игра с человеком</string>
+    <string name="new_game_vs_cpu">Новая игра с компьютером</string>
+    <string name="black">Чорные</string>
+    <string name="white">Белые</string>
+    <string name="wins">победили</string>
+    <string name="game_over">Игра окончена</string>
+    
+</resources>

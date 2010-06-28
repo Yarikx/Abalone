@@ -55,7 +55,7 @@ public class BoardView extends View implements Player, Watcher {
 	Move resultMove;
 	// animation
 	List<Ball> emptyBalls, animBals;
-	final static int T = 15, time = 500, N = time / T;
+	final static int T = 20, time = 400, N = time / T;
 	// highlight
 	boolean highlight = false;
 
