@@ -72,12 +72,12 @@ public class Ann implements ArtificialIntilligence {
 					for (int j = Board.getMinColumn(i); j <= Board
 							.getMaxColumn(i); j++) {
 						if (f[i][j] == side) {
-							if (f[i-1][j] == side) sum++;
-							if (f[i+1][j] == side) sum++;
-							if (f[i][j-1] == side) sum++;
-							if (f[i][j+1] == side) sum++;
-							if (f[i-1][j-1] == side) sum++;
-							if (f[i+1][j+1] == side) sum++;
+							if (f[i-1][j] == side) sum--;
+							if (f[i+1][j] == side) sum--;
+							if (f[i][j-1] == side) sum--;
+							if (f[i][j+1] == side) sum--;
+							if (f[i-1][j-1] == side) sum--;
+							if (f[i+1][j+1] == side) sum--;
 						}
 					}
 				return sum;

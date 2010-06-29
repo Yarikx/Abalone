@@ -6,4 +6,3 @@
 		Board getBoard()
 	3. Interface Player with method:
 		Move requestMove() - this method asks player (whether human or AI) for a move
-	
