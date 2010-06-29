@@ -13,6 +13,14 @@ public class Board implements Cloneable,Serializable {
 
 	private byte[][] field;
 	private int whiteCaptured = 0;
+	public void setWhiteCaptured(int whiteCaptured) {
+		this.whiteCaptured = whiteCaptured;
+	}
+
+	public void setBlackCaptured(int blackCaptured) {
+		this.blackCaptured = blackCaptured;
+	}
+
 	private int blackCaptured = 0;
 
 	public Board() {
