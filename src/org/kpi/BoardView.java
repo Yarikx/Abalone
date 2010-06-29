@@ -529,7 +529,7 @@ public class BoardView extends View implements Player, Watcher {
 		}
 		Log.d("draw", "row = " + row);
 		Log.d("draw", "column = " + column);
-		return new Cell(row, column);
+		return Cell.get(row, column);
 	}
 
 	public Move requestMove(Game g) {
