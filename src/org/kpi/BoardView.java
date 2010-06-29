@@ -18,12 +18,12 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -42,7 +42,8 @@ public class BoardView extends View implements Player, Watcher {
 		this.parent = parent;
 	}
 
-	Paint defaultPaint, blackP, whiteP, emptyP, highlightedP, selectedP;
+	Paint defaultPaint, blackP, whiteP, emptyP, highlightedP, selectedP,
+			boardP;
 	private Board board;
 	boolean animation = false;
 
@@ -59,7 +60,7 @@ public class BoardView extends View implements Player, Watcher {
 	// highlight
 	boolean highlight = false;
 
-	Drawable blackBall,whiteBall,emptyBall;
+	Drawable blackBall, whiteBall, emptyBall;
 
 	class Ball {
 		float x, y;
@@ -78,6 +79,9 @@ public class BoardView extends View implements Player, Watcher {
 	private Game game;
 	private MoveType currentMoveType;
 	private Group currentGroup;
+	private Resources r;
+	private RectF boardRect;
+	private Rect dst;
 
 	public BoardView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -92,7 +96,7 @@ public class BoardView extends View implements Player, Watcher {
 	private void init() {
 		setFocusable(true);
 		monitor = new Object();
-		Resources r = getResources();
+		r = getResources();
 		blackBall = getResources().getDrawable(R.drawable.black_ball);
 		whiteBall = getResources().getDrawable(R.drawable.white_ball);
 		emptyBall = getResources().getDrawable(R.drawable.hole);
@@ -100,7 +104,6 @@ public class BoardView extends View implements Player, Watcher {
 		defaultPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		defaultPaint.setColor(r.getColor(R.color.defaultColor));
 		blackP = new Paint(Paint.ANTI_ALIAS_FLAG);
-		setBackgroundColor(Color.BLUE);
 		blackP.setColor(Color.BLACK);
 		whiteP = new Paint(Paint.ANTI_ALIAS_FLAG);
 		whiteP.setColor(Color.WHITE);
@@ -113,6 +116,10 @@ public class BoardView extends View implements Player, Watcher {
 		selectedP = new Paint(Paint.ANTI_ALIAS_FLAG);
 		selectedP.setColor(Color.GREEN);
 		selectedP.setAlpha(100);
+
+		boardP = new Paint(Paint.ANTI_ALIAS_FLAG);
+		boardP.setColor(r.getColor(R.color.board));
+		dst = new Rect();
 
 	}
 
@@ -160,11 +167,20 @@ public class BoardView extends View implements Player, Watcher {
 	@Override
 	protected void onDraw(Canvas canvas) {
 		// canvas.drawLine(0, 0, 100, 100, defaultPaint);
-		Log.d("draw", "height = " + getHeight());
-		Log.d("draw", "width = " + getWidth());
+//		Log.d("draw", "height = " + getHeight());
+//		Log.d("draw", "width = " + getWidth());
 
 		// TODO boar edges
+		canvas.save();
 
+		
+
+		for (int i = 1; i <= 6; i++) {
+			canvas.drawRect(boardRect, boardP);
+			canvas.rotate(60, getWidth() / 2, getHeight() / 2);
+		}
+
+		canvas.restore();
 		// TODO cells
 
 		if (balls != null) {
@@ -181,15 +197,19 @@ public class BoardView extends View implements Player, Watcher {
 		Log.d("draw", "refresh anim=" + animation + " " + animBals);
 
 		if (animation) {
-			for (Ball ball : emptyBalls) {
+			if (emptyBall != null) {
+				for (Ball ball : emptyBalls) {
 
-				drawBall(ball, canvas);
+					drawBall(ball, canvas);
 
+				}
 			}
-			for (Ball ball : animBals) {
+			if (animBals != null) {
+				for (Ball ball : animBals) {
 
-				drawBall(ball, canvas);
+					drawBall(ball, canvas);
 
+				}
 			}
 
 		}
@@ -218,10 +238,9 @@ public class BoardView extends View implements Player, Watcher {
 
 	private void drawBall(Ball ball, Canvas canvas) {
 
-		Rect dst = new Rect((int) (ball.x - ballSize / 2),
+		dst.set((int) (ball.x - ballSize / 2),
 				(int) (ball.y - ballSize / 2), (int) (ball.x + ballSize / 2),
 				(int) (ball.y + ballSize / 2));
-		
 
 		switch (ball.state) {
 		case Layout.B:
@@ -235,17 +254,17 @@ public class BoardView extends View implements Player, Watcher {
 		case Layout.E:
 			emptyBall.setBounds(dst);
 			emptyBall.draw(canvas);
-			//canvas.drawCircle(ball.x, ball.y, ballSize / 2f, curPaint);
+			// canvas.drawCircle(ball.x, ball.y, ballSize / 2f, curPaint);
 			break;
 		}
-		
+
 	}
 
 	private void drawHighlight(Group hGroup, Canvas canvas) {
 		PointF p;
 		for (Cell cell : hGroup.getCells()) {
 			p = getPointByCell(cell);
-			canvas.drawCircle(p.x, p.y, 0.6f * ballSize, highlightedP);
+			canvas.drawCircle(p.x, p.y, 0.5f * ballSize, highlightedP);
 		}
 	}
 
@@ -253,7 +272,7 @@ public class BoardView extends View implements Player, Watcher {
 		PointF p;
 		for (Cell cell : hGroup.getCells()) {
 			p = getPointByCell(cell);
-			canvas.drawCircle(p.x, p.y, 0.6f * ballSize, selectedP);
+			canvas.drawCircle(p.x, p.y, 0.5f * ballSize, selectedP);
 		}
 	}
 
@@ -273,7 +292,8 @@ public class BoardView extends View implements Player, Watcher {
 		this.board = board;
 		Log.d("screen", getHeight() + "");
 		Log.d("screen", getMeasuredHeight() + "");
-
+		boardRect = new RectF(getWidth() / 4f - 1, 1,
+				3f * getWidth() / 4f + 1, getWidth() / 2);
 		balls = new ArrayList<Ball>();
 		ballSize = ((float) size - 2 * borderSize) / 9f;
 		for (int i = 1; i <= 9; i++) {
@@ -289,6 +309,7 @@ public class BoardView extends View implements Player, Watcher {
 				}
 			}
 		}
+		
 
 		// postInvalidate();
 		animBals = emptyBalls = null;
@@ -579,9 +600,10 @@ public class BoardView extends View implements Player, Watcher {
 
 		emptyBalls = new LinkedList<Ball>();
 		animBals = new LinkedList<Ball>();
+		PointF point;
 		for (Cell cell : moveType.getMovedCells().getCells()) {
 			float x, y;
-			PointF point = getPointByCell(cell);
+			 point = getPointByCell(cell);
 			x = point.x;
 			y = point.y;
 			emptyBalls.add(new Ball(x, y, Layout.E));
@@ -598,16 +620,17 @@ public class BoardView extends View implements Player, Watcher {
 				ball.y += (1d / (double) N) * Math.sin(angle) * ballSize;
 			}
 
-			postInvalidate();
+			
 			try {
 				Thread.sleep(T);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			postInvalidate();
 		}
 		try {
-			Thread.sleep(100);
+			Thread.sleep(200);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -648,7 +671,6 @@ public class BoardView extends View implements Player, Watcher {
 
 	@Override
 	public void win(byte side) {
-		final Resources r = getResources();
 
 		final String sideString = (side == Board.BLACK) ? r
 				.getString(R.string.black) : r.getString(R.string.white);
