@@ -116,11 +116,7 @@ public class GameActivity extends Activity {
 			oos.close();
 
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 
 		super.onPause();
