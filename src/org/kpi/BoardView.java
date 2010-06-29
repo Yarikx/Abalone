@@ -18,7 +18,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -57,7 +56,7 @@ public class BoardView extends View implements Player, Watcher {
 	Move resultMove;
 	// animation
 	List<Ball> emptyBalls, animBals;
-	final static int T = 10, time = 600, N = time / T;
+	final static int T = 20, time = 400, N = time / T;
 	// highlight
 	boolean highlight = false;
 
@@ -81,6 +80,8 @@ public class BoardView extends View implements Player, Watcher {
 	private MoveType currentMoveType;
 	private Group currentGroup;
 	private Resources r;
+	private RectF boardRect;
+	private Rect dst;
 
 	public BoardView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -118,6 +119,7 @@ public class BoardView extends View implements Player, Watcher {
 
 		boardP = new Paint(Paint.ANTI_ALIAS_FLAG);
 		boardP.setColor(r.getColor(R.color.board));
+		dst = new Rect();
 
 	}
 
@@ -165,17 +167,16 @@ public class BoardView extends View implements Player, Watcher {
 	@Override
 	protected void onDraw(Canvas canvas) {
 		// canvas.drawLine(0, 0, 100, 100, defaultPaint);
-		Log.d("draw", "height = " + getHeight());
-		Log.d("draw", "width = " + getWidth());
+//		Log.d("draw", "height = " + getHeight());
+//		Log.d("draw", "width = " + getWidth());
 
 		// TODO boar edges
 		canvas.save();
 
-		RectF rect = new RectF(getWidth() / 4f - 1, 1,
-				3f * getWidth() / 4f + 1, getWidth() / 2);
+		
 
 		for (int i = 1; i <= 6; i++) {
-			canvas.drawRect(rect, boardP);
+			canvas.drawRect(boardRect, boardP);
 			canvas.rotate(60, getWidth() / 2, getHeight() / 2);
 		}
 
@@ -237,7 +238,7 @@ public class BoardView extends View implements Player, Watcher {
 
 	private void drawBall(Ball ball, Canvas canvas) {
 
-		Rect dst = new Rect((int) (ball.x - ballSize / 2),
+		dst.set((int) (ball.x - ballSize / 2),
 				(int) (ball.y - ballSize / 2), (int) (ball.x + ballSize / 2),
 				(int) (ball.y + ballSize / 2));
 
@@ -263,7 +264,7 @@ public class BoardView extends View implements Player, Watcher {
 		PointF p;
 		for (Cell cell : hGroup.getCells()) {
 			p = getPointByCell(cell);
-			canvas.drawCircle(p.x, p.y, 0.6f * ballSize, highlightedP);
+			canvas.drawCircle(p.x, p.y, 0.5f * ballSize, highlightedP);
 		}
 	}
 
@@ -271,7 +272,7 @@ public class BoardView extends View implements Player, Watcher {
 		PointF p;
 		for (Cell cell : hGroup.getCells()) {
 			p = getPointByCell(cell);
-			canvas.drawCircle(p.x, p.y, 0.6f * ballSize, selectedP);
+			canvas.drawCircle(p.x, p.y, 0.5f * ballSize, selectedP);
 		}
 	}
 
@@ -291,7 +292,8 @@ public class BoardView extends View implements Player, Watcher {
 		this.board = board;
 		Log.d("screen", getHeight() + "");
 		Log.d("screen", getMeasuredHeight() + "");
-
+		boardRect = new RectF(getWidth() / 4f - 1, 1,
+				3f * getWidth() / 4f + 1, getWidth() / 2);
 		balls = new ArrayList<Ball>();
 		ballSize = ((float) size - 2 * borderSize) / 9f;
 		for (int i = 1; i <= 9; i++) {
@@ -307,6 +309,7 @@ public class BoardView extends View implements Player, Watcher {
 				}
 			}
 		}
+		
 
 		// postInvalidate();
 		animBals = emptyBalls = null;
@@ -597,9 +600,10 @@ public class BoardView extends View implements Player, Watcher {
 
 		emptyBalls = new LinkedList<Ball>();
 		animBals = new LinkedList<Ball>();
+		PointF point;
 		for (Cell cell : moveType.getMovedCells().getCells()) {
 			float x, y;
-			PointF point = getPointByCell(cell);
+			 point = getPointByCell(cell);
 			x = point.x;
 			y = point.y;
 			emptyBalls.add(new Ball(x, y, Layout.E));
@@ -616,13 +620,14 @@ public class BoardView extends View implements Player, Watcher {
 				ball.y += (1d / (double) N) * Math.sin(angle) * ballSize;
 			}
 
-			postInvalidate();
+			
 			try {
 				Thread.sleep(T);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			postInvalidate();
 		}
 		try {
 			Thread.sleep(200);
