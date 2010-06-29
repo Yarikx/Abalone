@@ -24,6 +24,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -42,7 +43,8 @@ public class BoardView extends View implements Player, Watcher {
 		this.parent = parent;
 	}
 
-	Paint defaultPaint, blackP, whiteP, emptyP, highlightedP, selectedP;
+	Paint defaultPaint, blackP, whiteP, emptyP, highlightedP, selectedP,
+			boardP;
 	private Board board;
 	boolean animation = false;
 
@@ -55,11 +57,11 @@ public class BoardView extends View implements Player, Watcher {
 	Move resultMove;
 	// animation
 	List<Ball> emptyBalls, animBals;
-	final static int T = 20, time = 400, N = time / T;
+	final static int T = 10, time = 600, N = time / T;
 	// highlight
 	boolean highlight = false;
 
-	Drawable blackBall,whiteBall,emptyBall;
+	Drawable blackBall, whiteBall, emptyBall;
 
 	class Ball {
 		float x, y;
@@ -78,6 +80,7 @@ public class BoardView extends View implements Player, Watcher {
 	private Game game;
 	private MoveType currentMoveType;
 	private Group currentGroup;
+	private Resources r;
 
 	public BoardView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -92,7 +95,7 @@ public class BoardView extends View implements Player, Watcher {
 	private void init() {
 		setFocusable(true);
 		monitor = new Object();
-		Resources r = getResources();
+		r = getResources();
 		blackBall = getResources().getDrawable(R.drawable.black_ball);
 		whiteBall = getResources().getDrawable(R.drawable.white_ball);
 		emptyBall = getResources().getDrawable(R.drawable.hole);
@@ -100,7 +103,6 @@ public class BoardView extends View implements Player, Watcher {
 		defaultPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		defaultPaint.setColor(r.getColor(R.color.defaultColor));
 		blackP = new Paint(Paint.ANTI_ALIAS_FLAG);
-		setBackgroundColor(Color.BLUE);
 		blackP.setColor(Color.BLACK);
 		whiteP = new Paint(Paint.ANTI_ALIAS_FLAG);
 		whiteP.setColor(Color.WHITE);
@@ -113,6 +115,9 @@ public class BoardView extends View implements Player, Watcher {
 		selectedP = new Paint(Paint.ANTI_ALIAS_FLAG);
 		selectedP.setColor(Color.GREEN);
 		selectedP.setAlpha(100);
+
+		boardP = new Paint(Paint.ANTI_ALIAS_FLAG);
+		boardP.setColor(r.getColor(R.color.board));
 
 	}
 
@@ -164,7 +169,17 @@ public class BoardView extends View implements Player, Watcher {
 		Log.d("draw", "width = " + getWidth());
 
 		// TODO boar edges
+		canvas.save();
 
+		RectF rect = new RectF(getWidth() / 4f - 1, 1,
+				3f * getWidth() / 4f + 1, getWidth() / 2);
+
+		for (int i = 1; i <= 6; i++) {
+			canvas.drawRect(rect, boardP);
+			canvas.rotate(60, getWidth() / 2, getHeight() / 2);
+		}
+
+		canvas.restore();
 		// TODO cells
 
 		if (balls != null) {
@@ -181,15 +196,19 @@ public class BoardView extends View implements Player, Watcher {
 		Log.d("draw", "refresh anim=" + animation + " " + animBals);
 
 		if (animation) {
-			for (Ball ball : emptyBalls) {
+			if (emptyBall != null) {
+				for (Ball ball : emptyBalls) {
 
-				drawBall(ball, canvas);
+					drawBall(ball, canvas);
 
+				}
 			}
-			for (Ball ball : animBals) {
+			if (animBals != null) {
+				for (Ball ball : animBals) {
 
-				drawBall(ball, canvas);
+					drawBall(ball, canvas);
 
+				}
 			}
 
 		}
@@ -221,7 +240,6 @@ public class BoardView extends View implements Player, Watcher {
 		Rect dst = new Rect((int) (ball.x - ballSize / 2),
 				(int) (ball.y - ballSize / 2), (int) (ball.x + ballSize / 2),
 				(int) (ball.y + ballSize / 2));
-		
 
 		switch (ball.state) {
 		case Layout.B:
@@ -235,10 +253,10 @@ public class BoardView extends View implements Player, Watcher {
 		case Layout.E:
 			emptyBall.setBounds(dst);
 			emptyBall.draw(canvas);
-			//canvas.drawCircle(ball.x, ball.y, ballSize / 2f, curPaint);
+			// canvas.drawCircle(ball.x, ball.y, ballSize / 2f, curPaint);
 			break;
 		}
-		
+
 	}
 
 	private void drawHighlight(Group hGroup, Canvas canvas) {
@@ -607,7 +625,7 @@ public class BoardView extends View implements Player, Watcher {
 			}
 		}
 		try {
-			Thread.sleep(100);
+			Thread.sleep(200);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -648,7 +666,6 @@ public class BoardView extends View implements Player, Watcher {
 
 	@Override
 	public void win(byte side) {
-		final Resources r = getResources();
 
 		final String sideString = (side == Board.BLACK) ? r
 				.getString(R.string.black) : r.getString(R.string.white);
