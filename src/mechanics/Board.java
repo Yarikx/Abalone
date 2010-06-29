@@ -26,6 +26,10 @@ public class Board implements Cloneable,Serializable {
 			field = l.getWhiteStartField();
 	}
 
+	public byte[][] getField() {
+		return field;
+	}
+	
 	public static int getMinColumn(int row) {
 		return row < 6 ? 1 : row - 4;
 	}

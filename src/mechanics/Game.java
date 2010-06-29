@@ -52,6 +52,7 @@ public class Game {
 		int i = 0;
 		// BufferedReader br = new BufferedReader(new
 		// InputStreamReader(System.in));
+		Cell.init();
 		System.out.println(board);
 		Move move = null;
 		while (board.getMarblesCaptured(Board.WHITE) < 6
