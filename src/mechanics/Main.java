@@ -42,7 +42,10 @@ public class Main {
 
 	public static Direction convDir(String s) {
 		if (s.equals("NW"))
-			return Direction.NorthWest;
+			return Direction.NorthWest;//	public static Cell convCell(String s) {
+//		return new Cell((int) s.charAt(0) - (int) 'A' + 1, Integer
+//		.parseInt(Character.toString(s.charAt(1))));
+//}
 		else if (s.equals("N"))
 			return Direction.North;
 		else if (s.equals("E"))
@@ -55,10 +58,10 @@ public class Main {
 			return Direction.West;
 	}
 
-	public static Cell convCell(String s) {
-		return new Cell((int) s.charAt(0) - (int) 'A' + 1, Integer
-				.parseInt(Character.toString(s.charAt(1))));
-	}
+//	public static Cell convCell(String s) {
+//		return new Cell((int) s.charAt(0) - (int) 'A' + 1, Integer
+//				.parseInt(Character.toString(s.charAt(1))));
+//	}
 
 	public static byte convSide(String s) {
 		if (s.equals("W"))

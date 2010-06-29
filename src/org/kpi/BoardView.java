@@ -290,12 +290,12 @@ public class BoardView extends View implements Player, Watcher {
 	public void drawBoard(Board board) {
 		// invalidate();
 		this.board = board;
-		Log.d("screen", getHeight() + "");
-		Log.d("screen", getMeasuredHeight() + "");
-		boardRect = new RectF(getWidth() / 4f - 1, 1,
-				3f * getWidth() / 4f + 1, getWidth() / 2);
-		balls = new ArrayList<Ball>();
-		ballSize = ((float) size - 2 * borderSize) / 9f;
+
+//		Log.d("screen", getHeight() + "");
+//		Log.d("screen", getMeasuredHeight() + "");
+		ballSizeRecalc();
+		Log.d("draw", "ball size="+ballSize);
+
 		for (int i = 1; i <= 9; i++) {
 			float shift = (5f - i) * ballSize / 2f;
 			float x, y;
@@ -324,6 +324,13 @@ public class BoardView extends View implements Player, Watcher {
 		//
 		// }
 		// },"postInvalidateThread")).start();
+	}
+
+	public void ballSizeRecalc() {
+		boardRect = new RectF(getWidth() / 4f - 1, 1,
+				3f * getWidth() / 4f + 1, getWidth() / 2);
+		balls = new ArrayList<Ball>();
+		ballSize = ((float) size - 2 * borderSize) / 9f;
 	}
 
 	@Override
@@ -550,7 +557,7 @@ public class BoardView extends View implements Player, Watcher {
 		}
 		Log.d("draw", "row = " + row);
 		Log.d("draw", "column = " + column);
-		return new Cell(row, column);
+		return Cell.get(row, column);
 	}
 
 	public Move requestMove(Game g) {
@@ -690,5 +697,15 @@ public class BoardView extends View implements Player, Watcher {
 			}
 		});
 
+	}
+
+	@Override
+	public void ballCaptured(byte side) {
+		((GameActivity)parent).ballCaptured(side);
+		
+	}
+
+	public float getBallSize() {
+		return ballSize;
 	}
 }

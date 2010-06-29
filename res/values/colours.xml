@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<color name="defaultColor">#AFFF</color>
-	<color name="board">#454545</color>
+
+	<color name="board">#505050</color>
 </resources>

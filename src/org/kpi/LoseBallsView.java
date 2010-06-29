@@ -7,7 +7,7 @@ import android.view.View;
 public class LoseBallsView extends View{
 	
 	private byte side;
-	private static final int borderSize = 5, vJap = 5,hJap = 5;
+	private int n = 0 ;
 	
 	
 	public LoseBallsView(Context context, AttributeSet attrs) {
@@ -20,14 +20,6 @@ public class LoseBallsView extends View{
 		
 	}
 
-	public void setSide(byte side) {
-		this.side = side;
-	}
-
-	public byte getSide() {
-		return side;
-	}
-	
-	
+		
 
 }

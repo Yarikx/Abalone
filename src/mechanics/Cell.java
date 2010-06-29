@@ -4,12 +4,25 @@ public class Cell {
 
 	private int row;
 	private int column;
+	private static Cell[][] cellStorage = new Cell[12][12];
 
-	public Cell(int newRow, int newColumn) {
+	public static void init() {
+		for (int i = 0; i < 12; i++)
+			for (int j = 0; j < 12; j++)
+				cellStorage[i][j] = new Cell(i, j);
+	}
+
+	private Cell(int newRow, int newColumn) {
 		row = newRow;
 		column = newColumn;
 	}
 
+	public static Cell get(int row, int column) {
+		if (row > 9 || row < 1 || column > Board.getMaxColumn(row) || column < Board.getMinColumn(row))
+			return cellStorage[10][10];
+		return cellStorage[row][column];
+	}
+	
 	public int getRow() {
 		return row;
 	}
@@ -19,32 +32,48 @@ public class Cell {
 	}
 
 	public Cell shift(Direction d) {
-		int newRow = row;
-		int newColumn = column;
+//		int newRow = row;
+//		int newColumn = column;
+//		switch (d) {
+//		case NorthWest:
+//			newRow--;
+//			newColumn--;
+//			break;
+//		case North:
+//			newRow--;
+//			break;
+//		case East:
+//			newColumn++;
+//			break;
+//		case SouthEast:
+//			newRow++;
+//			newColumn++;
+//			break;
+//		case South:
+//			newRow++;
+//			break;
+//		case West:
+//			newColumn--;
+//			break;
+//		default:
+//		}
+//		return cellStorage[newRow][newColumn];
 		switch (d) {
 		case NorthWest:
-			newRow--;
-			newColumn--;
-			break;
+			return get(row-1,column-1);
 		case North:
-			newRow--;
-			break;
+			return get(row-1,column);
 		case East:
-			newColumn++;
-			break;
+			return get(row,column+1);
 		case SouthEast:
-			newRow++;
-			newColumn++;
-			break;
+			return get(row+1,column+1);
 		case South:
-			newRow++;
-			break;
+			return get(row+1,column);
 		case West:
-			newColumn--;
-			break;
+			return get(row,column-1);
 		default:
+			return get(row,column);
 		}
-		return new Cell(newRow, newColumn);
 	}
 
 	public boolean onAnyLine(Cell c) {

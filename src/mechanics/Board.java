@@ -13,6 +13,14 @@ public class Board implements Cloneable,Serializable {
 
 	private byte[][] field;
 	private int whiteCaptured = 0;
+	public void setWhiteCaptured(int whiteCaptured) {
+		this.whiteCaptured = whiteCaptured;
+	}
+
+	public void setBlackCaptured(int blackCaptured) {
+		this.blackCaptured = blackCaptured;
+	}
+
 	private int blackCaptured = 0;
 
 	public Board() {
@@ -26,6 +34,10 @@ public class Board implements Cloneable,Serializable {
 			field = l.getWhiteStartField();
 	}
 
+	public byte[][] getField() {
+		return field;
+	}
+	
 	public static int getMinColumn(int row) {
 		return row < 6 ? 1 : row - 4;
 	}
@@ -147,7 +159,7 @@ public class Board implements Cloneable,Serializable {
 		for (int i = 1; i <= 9; i++)
 			for (int j = getMinColumn(i); j <= getMaxColumn(i); j++)
 				if (getState(i, j) == WHITE || getState(i, j) == BLACK)
-					list.add(new Cell(i, j));
+					list.add(Cell.get(i, j));
 		return list;
 	}
 
@@ -156,7 +168,7 @@ public class Board implements Cloneable,Serializable {
 		for (int i = 1; i <= 9; i++)
 			for (int j = getMinColumn(i); j <= getMaxColumn(i); j++)
 				if (getState(i, j) == side)
-					list.add(new Cell(i, j));
+					list.add(Cell.get(i, j));
 		return list;
 	}
 
