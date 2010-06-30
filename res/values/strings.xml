@@ -1,16 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello">Hello World, Hello!</string>
-    <string name="app_name">Abalone</string>
-    <string name="new_game">New Game</string>
-    <string name="resume_game">Resume Game</string>
-    <string name="vs_cpu">vs CPU</string>
-    <string name="vs_human">vs Human</string>
-    <string name="new_game_vs_human">New Game vs Human</string>
-    <string name="new_game_vs_cpu">New Game vs CPU </string>
-    <string name="black">Black</string>
-    <string name="white">White</string>
-    <string name="wins">wins</string>
-    <string name="game_over">Game Over</string>
-    
+	<string name="hello">Hello World, Hello!</string>
+	<string name="app_name">Abalone</string>
+	<string name="new_game">New Game</string>
+	<string name="resume_game">Resume Game</string>
+	<string name="vs_cpu">vs CPU</string>
+	<string name="vs_human">vs Human</string>
+	<string name="new_game_vs_human">New Game vs Human</string>
+	<string name="new_game_vs_cpu">New Game vs CPU </string>
+	<string name="black">Black</string>
+	<string name="white">White</string>
+	<string name="wins">wins</string>
+	<string name="game_over">Game Over</string>
+
+	<string name="rules_title">Rules</string>
+	<string name="rules">The board consists of 61 circular spaces arranged
+		in a hexagon, five on a side. Each player has 14 marbles that rest in
+		the spaces and are initially arranged as shown at left.\nPlay
+		alternates between the players one move at a time, with the black
+		marbles moving first. For each move, a player moves a line of one, two
+		or three one space.\nThe move can be either in-line (parallel to the
+		line of marbles) or broadside (not parallel to the line of marbles),
+		as illustrated at right.\n
+
+		A player can push their opponent′s marbles which are in an adjacent
+		space to their own with an in-line move only. They can only push if
+		the pushing line has more marbles than the pushed line (three can push
+		two or one; two can push one).\nMarbles must be pushed into an open
+		space (i.e. not blocked by a marble of either colour).\nThe winner is
+		the first player to gain six opposing marbles from the opponent.
+	</string>
+
 </resources>

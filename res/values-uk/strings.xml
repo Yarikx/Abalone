@@ -1,16 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello">Hello World, Hello!</string>
-    <string name="app_name">Abalone</string>
-    <string name="new_game">Нова гра</string>
-    <string name="resume_game">Відновити гру</string>
-    <string name="vs_cpu">з комп'ютером'</string>
-    <string name="vs_human">з людиною</string>
-    <string name="new_game_vs_human">Нова гра з людиною</string>
-    <string name="new_game_vs_cpu">Нова гра з комп'ютером</string>
-    <string name="black">Чорні</string>
-    <string name="white">Білі</string>
-    <string name="wins">перемогли</string>
-    <string name="game_over">Гра закінчена</string>
-    
+	<string name="hello">Hello World, Hello!</string>
+	<string name="app_name">Abalone</string>
+	<string name="new_game">Нова гра</string>
+	<string name="resume_game">Відновити гру</string>
+	<string name="vs_cpu">з комп'ютером'</string>
+	<string name="vs_human">з людиною</string>
+	<string name="new_game_vs_human">Нова гра з людиною</string>
+	<string name="new_game_vs_cpu">Нова гра з комп'ютером</string>
+	<string name="black">Чорні</string>
+	<string name="white">Білі</string>
+	<string name="wins">перемогли</string>
+	<string name="game_over">Гра закінчена</string>
+
+	<string name="rules_title">Правила</string>
+	<string name="rules">Кожен гравець має по 14 кульок (білі та чорні)\n
+		Виграє той, хто першим виштовхне 6 кульок суперника за межі ігрового
+		поля.\n
+		Рухайте 1, 2 или 3 кульки за один раз (по прямі або в
+		сторону)\n
+		Для того, щоб посунути кульку вашого суперника, створіть
+		одну з трьох наведених комбінацій (Ви маєте бути сильнішими ніж ваш суперник):\n
+		1) Три проти двох\n
+		2) Три проти одного\n
+		3) Два проти
+		одного\n
+		Виштовхніть кульку за межі поля.\n
+
+		Виштовхнете 6 - ви переможець!\n
+	</string>
+
 </resources>

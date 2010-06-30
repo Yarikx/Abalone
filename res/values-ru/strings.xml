@@ -1,16 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello">Hello World, Hello!</string>
-    <string name="app_name">Abalone</string>
-    <string name="new_game">Новая игра</string>
-    <string name="resume_game">Возобновить игру</string>
-    <string name="vs_cpu">с компьютера</string>
-    <string name="vs_human">с человеком</string>
-    <string name="new_game_vs_human">Новая игра с человеком</string>
-    <string name="new_game_vs_cpu">Новая игра с компьютером</string>
-    <string name="black">Чорные</string>
-    <string name="white">Белые</string>
-    <string name="wins">победили</string>
-    <string name="game_over">Игра окончена</string>
-    
+	<string name="hello">Hello World, Hello!</string>
+	<string name="app_name">Abalone</string>
+	<string name="new_game">Новая игра</string>
+	<string name="resume_game">Возобновить игру</string>
+	<string name="vs_cpu">с компьютера</string>
+	<string name="vs_human">с человеком</string>
+	<string name="new_game_vs_human">Новая игра с человеком</string>
+	<string name="new_game_vs_cpu">Новая игра с компьютером</string>
+	<string name="black">Черные</string>
+	<string name="white">Белые</string>
+	<string name="wins">победили</string>
+	<string name="game_over">Игра окончена</string>
+
+
+	<string name="rules_title">Правила</string>
+	<string name="rules">Каждый из двух игроков имеет 14 шариков (белые или
+		черные)\n
+		Выигрывает тот, кто первым вытолкнет 6 шариков соперника за
+		пределы игрового поля.\n
+		Перемещайте 1, 2 или 3 шарика за один раз (по прямой или в сторону)\n
+		Для того, чтобы сдвинуть шарик Вашего соперника, создайте одну из трех
+		приведенных комбинаций (Вы должны быть сильнее, чем Ваш противник):\n
+		1) Три против двух\n
+		2) Три против одного\n
+		3) Два против одного\n
+		Вытолкните шарик за пределы поля.\n
+
+		Вытолкните шесть – Вы победитель!\n
+	</string>
+
 </resources>
