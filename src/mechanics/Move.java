@@ -9,22 +9,22 @@ package mechanics;
 public class Move {
 
 	/**
-	 * Stores a source group that is moved.
+	 * Source group that is moved.
 	 */
 	private Group source;
 
 	/**
-	 * Stores a new position of the moved group.
+	 * New position of the moved group.
 	 */
 	private Group destination;
 
 	/**
-	 * Stores a direction in which the group was moved.
+	 * Direction in which the group was moved.
 	 */
 	private Direction direction;
 
 	/**
-	 * Stores a side that performs a move.
+	 * Side that performs a move.
 	 */
 	private byte side;
 

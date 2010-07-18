@@ -1,9 +1,16 @@
 package mechanics;
 
+/**
+ * Class that constructs a classic Abalone starting position.
+ * 
+ * @author Ajee Interactive
+ */
 public class ClassicLayout extends Layout {
 
-	private byte[][] start = { 
-			{ N, N, N, N, N, N, N, N, N, N, N },
+	/**
+	 * Array that contains the cell description for the starting position.
+	 */
+	private byte[][] start = { { N, N, N, N, N, N, N, N, N, N, N },
 			{ N, W, W, W, W, W, N, N, N, N, N }, // A
 			{ N, W, W, W, W, W, W, N, N, N, N }, // W
 			{ N, E, E, W, W, W, E, E, N, N, N }, // C
@@ -15,8 +22,11 @@ public class ClassicLayout extends Layout {
 			{ N, N, N, N, N, B, B, B, B, B, N }, // I
 			{ N, N, N, N, N, N, N, N, N, N, N } };
 
+	/**
+	 * Returns the starting position.
+	 */
 	public byte[][] getBlackStartField() {
 		return start;
 	}
-	
+
 }

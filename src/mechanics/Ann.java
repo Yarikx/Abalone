@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+//TODO Javadoc
 public class Ann implements ArtificialIntilligence {
 
 	private static int CLEVER = 1;

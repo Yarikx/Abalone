@@ -8,12 +8,12 @@ package mechanics;
 public class Group {
 
 	/**
-	 * Stores the cell instances.
+	 * Array of cell instances.
 	 */
 	private Cell[] cells;
 
 	/**
-	 * Stores the length of a group for convenience purposes.
+	 * Length of a group for convenience purposes.
 	 */
 	private int size;
 

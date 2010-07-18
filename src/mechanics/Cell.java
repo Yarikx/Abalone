@@ -9,12 +9,12 @@ package mechanics;
 public final class Cell {
 
 	/**
-	 * Stores the X coordinate of the cell.
+	 * X coordinate of the cell.
 	 */
 	private int row;
 
 	/**
-	 * Stores the Y coordinate of the cell.
+	 * Y coordinate of the cell.
 	 */
 	private int column;
 

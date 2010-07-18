@@ -12,6 +12,7 @@ import mechanics.Board;
 import mechanics.ClassicLayout;
 import mechanics.Game;
 import mechanics.Player;
+import mechanics.Side;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -36,9 +37,8 @@ public class GameActivity extends Activity {
 			String sp = intent.getExtras().getString("vs");
 			
 			Player secondPlayer = sp.equals("cpu")?(new Ann()):bw;
-			game = new Game(new ClassicLayout(), Board.BLACK, bw,
-					secondPlayer, bw);
-			game.setVsType(sp.equals("cpu")?Game.CPU:Game.HUMAN);
+			game = new Game(new ClassicLayout(), Side.BLACK, bw,
+					secondPlayer, bw, sp.equals("cpu") ? Game.CPU : Game.HUMAN);
 			startGame();
 		}else if(intent.getAction().equals("org.kpi.abalone.RESUMEGAME")){
 			Log.d("state","resumeing");
@@ -49,7 +49,7 @@ public class GameActivity extends Activity {
 				byte side = ois.readByte();
 				byte vsType = ois.readByte();
 				Player secondPlayer = (vsType==Game.HUMAN)?bw:(new Ann());
-				game = new Game(board, side, bw, secondPlayer, bw);
+				game = new Game(board, side, bw, secondPlayer, bw, vsType);
 				startGame();
 				
 			} catch (FileNotFoundException e) {
