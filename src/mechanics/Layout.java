@@ -4,8 +4,8 @@ public abstract class Layout {
 
 	public static final byte N = 0;
 	public static final byte E = 1;
-	public static final byte W = (byte) Board.WHITE;
-	public static final byte B = (byte) Board.BLACK;
+	public static final byte W = Side.WHITE;
+	public static final byte B = Side.BLACK;
 
 	public abstract byte[][] getBlackStartField();
 	

@@ -6,8 +6,8 @@ import java.util.List;
 
 public class Board implements Cloneable,Serializable {
 
-	public static final byte WHITE = 2;
-	public static final byte BLACK = 3;
+//	public static final byte WHITE = 2;
+//	public static final byte BLACK = 3;
 	public static final int FAILURE = 0;
 	public static final int SUCCESS = 1;
 
@@ -16,11 +16,11 @@ public class Board implements Cloneable,Serializable {
 	private int blackCaptured = 0;
 
 	public Board() {
-		this(new ClassicLayout(), BLACK);
+		this(new ClassicLayout(), Side.BLACK);
 	}
 
 	public Board(Layout l, byte downSide) {
-		if (downSide == BLACK)
+		if (downSide == Side.BLACK)
 			field = l.getBlackStartField();
 		else
 			field = l.getWhiteStartField();
@@ -71,12 +71,12 @@ public class Board implements Cloneable,Serializable {
 			if (nCell == Layout.N)
 				return new MoveType(MoveType.NOMOVE);
 			int nnCell = getState(m.getPeak().shift(d).shift(d));
-			byte enemyMarble = oppositeSide(m.getSide());
+			byte enemyMarble = Side.opposite(m.getSide());
 			if (nCell == enemyMarble
 					&& (nnCell == Layout.E || nnCell == Layout.N))
 				return new MoveType(MoveType.ENEMYPUSH, new Group(m.getTail(),
 						m.getPeak().shift(d)), m.getDestination());
-			if (nnCell == Layout.N || m.getSource().lineLength() == 2)
+			if (nnCell == Layout.N || m.getSource().getSize() == 2)
 				return new MoveType(MoveType.NOMOVE);
 			int nnnCell = getState(m.getPeak().shift(d).shift(d).shift(d));
 			if (nCell == enemyMarble && nnCell == enemyMarble
@@ -103,7 +103,7 @@ public class Board implements Cloneable,Serializable {
 			do {
 				dest = getState(c);
 				if (dest == Layout.N)
-					if (m.getSide() == WHITE)
+					if (m.getSide() == Side.WHITE)
 						blackCaptured++;
 					else
 						whiteCaptured++;
@@ -143,14 +143,14 @@ public class Board implements Cloneable,Serializable {
 	}
 
 	public int getMarblesCaptured(byte side) {
-		return side == WHITE ? whiteCaptured : blackCaptured;
+		return side == Side.WHITE ? whiteCaptured : blackCaptured;
 	}
 
 	public List<Cell> getAllMarbles() {
 		List<Cell> list = new ArrayList<Cell>();
 		for (int i = 1; i <= 9; i++)
 			for (int j = getMinColumn(i); j <= getMaxColumn(i); j++)
-				if (getState(i, j) == WHITE || getState(i, j) == BLACK)
+				if (getState(i, j) == Side.WHITE || getState(i, j) == Side.BLACK)
 					list.add(Cell.get(i, j));
 		return list;
 	}
@@ -191,7 +191,7 @@ public class Board implements Cloneable,Serializable {
 			return null;
 	}
 
-	public static byte oppositeSide(byte side) {
-		return side == WHITE ? BLACK : WHITE;
-	}
+//	public static byte oppositeSide(byte side) {
+//		return side == WHITE ? BLACK : WHITE;
+//	}
 }

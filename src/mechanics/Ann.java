@@ -8,8 +8,27 @@ public class Ann implements ArtificialIntilligence {
 
 	private static int CLEVER = 1;
 	private static int STUPID = 2;
+	private static Direction[] primaryDirections = { Direction.East,
+			Direction.South, Direction.SouthEast };
+	private static Direction[] secondaryDirections = { Direction.West,
+			Direction.North, Direction.NorthWest };
+	private static Direction[] notNorthSouthDirections = { Direction.NorthWest,
+			Direction.SouthEast, Direction.West, Direction.East };
+	private static Direction[] notNWSEDirections = { Direction.North,
+			Direction.South, Direction.West, Direction.East };
+	private static Direction[] notWestEastDirections = { Direction.NorthWest,
+			Direction.SouthEast, Direction.North, Direction.South };
 
 	private Move bestMove;
+
+	private static Direction[] getNotDirection(Direction d) {
+		if (d == Direction.North || d == Direction.South)
+			return notNorthSouthDirections;
+		else if (d == Direction.NorthWest || d == Direction.SouthEast)
+			return notNWSEDirections;
+		else
+			return notWestEastDirections;
+	}
 
 	private void searchForLines(Board b, Cell c, List<Group> l, Direction d,
 			int side) {
@@ -48,13 +67,13 @@ public class Ann implements ArtificialIntilligence {
 
 	private double evaluatePosition(Board b, byte side, int steps,
 			double alphabeta, int moveType) {
-		byte oppSide = Board.oppositeSide(side);
+		byte oppSide = Side.opposite(side);
 		Cell center = Cell.get(5, 5);
 		byte[][] f = b.getField();
 		if (steps == 0) {
 			if (moveType == CLEVER) {
 				double sum = 4
-						* (b.getMarblesCaptured(Board.oppositeSide(side)) - b
+						* (b.getMarblesCaptured(Side.opposite(side)) - b
 								.getMarblesCaptured(side)) + Math.random()
 						* 0.000001;
 				for (int i = 1; i <= 9; i++)
@@ -72,12 +91,18 @@ public class Ann implements ArtificialIntilligence {
 					for (int j = Board.getMinColumn(i); j <= Board
 							.getMaxColumn(i); j++) {
 						if (f[i][j] == side) {
-							if (f[i-1][j] == side) sum--;
-							if (f[i+1][j] == side) sum--;
-							if (f[i][j-1] == side) sum--;
-							if (f[i][j+1] == side) sum--;
-							if (f[i-1][j-1] == side) sum--;
-							if (f[i+1][j+1] == side) sum--;
+							if (f[i - 1][j] == side)
+								sum--;
+							if (f[i + 1][j] == side)
+								sum--;
+							if (f[i][j - 1] == side)
+								sum--;
+							if (f[i][j + 1] == side)
+								sum--;
+							if (f[i - 1][j - 1] == side)
+								sum--;
+							if (f[i + 1][j + 1] == side)
+								sum--;
 						}
 					}
 				return sum;
@@ -93,7 +118,7 @@ public class Ann implements ArtificialIntilligence {
 			flag: for (int i = 1; i <= 9; i++)
 				for (int j = Board.getMinColumn(i); j <= Board.getMaxColumn(i); j++) {
 					if (f[i][j] == side) {
-						for (Direction d : Direction.getSecondary()) {
+						for (Direction d : secondaryDirections) {
 							original = Cell.get(i, j);
 							shifted1 = original.shift(d);
 							state1 = b.getState(shifted1);
@@ -147,7 +172,7 @@ public class Ann implements ArtificialIntilligence {
 										futureBoard.makeMove(m);
 										currValue = evaluatePosition(
 												futureBoard,
-												Board.oppositeSide(side),
+												Side.opposite(side),
 												steps - 1,
 												ab == Double.NEGATIVE_INFINITY ? ab
 														: -ab, moveType);
@@ -162,7 +187,7 @@ public class Ann implements ArtificialIntilligence {
 								}
 							}
 						}
-						for (Direction d : Direction.getPrimary()) {
+						for (Direction d : primaryDirections) {
 							original = Cell.get(i, j);
 							shifted1 = original.shift(d);
 							state1 = b.getState(shifted1);
@@ -216,7 +241,7 @@ public class Ann implements ArtificialIntilligence {
 										futureBoard.makeMove(m);
 										currValue = evaluatePosition(
 												futureBoard,
-												Board.oppositeSide(side),
+												Side.opposite(side),
 												steps - 1,
 												ab == Double.NEGATIVE_INFINITY ? ab
 														: -ab, moveType);
@@ -228,8 +253,7 @@ public class Ann implements ArtificialIntilligence {
 											ab = bestValue;
 										}
 									}
-									for (Direction md : Direction
-											.getNotDirection(d)) {
+									for (Direction md : getNotDirection(d)) {
 										if (b.getState(original.shift(md)) == Layout.E
 												&& b.getState(shifted1
 														.shift(md)) == Layout.E
@@ -241,7 +265,7 @@ public class Ann implements ArtificialIntilligence {
 											futureBoard.makeMove(m);
 											currValue = evaluatePosition(
 													futureBoard,
-													Board.oppositeSide(side),
+													Side.opposite(side),
 													steps - 1,
 													ab == Double.NEGATIVE_INFINITY ? ab
 															: -ab, moveType);
@@ -255,8 +279,7 @@ public class Ann implements ArtificialIntilligence {
 										}
 									}
 								}
-								for (Direction md : Direction
-										.getNotDirection(d)) {
+								for (Direction md : getNotDirection(d)) {
 									if (b.getState(original.shift(md)) == Layout.E
 											&& b.getState(shifted1.shift(md)) == Layout.E) {
 										futureBoard = b.clone();
@@ -265,7 +288,7 @@ public class Ann implements ArtificialIntilligence {
 										futureBoard.makeMove(m);
 										currValue = evaluatePosition(
 												futureBoard,
-												Board.oppositeSide(side),
+												Side.opposite(side),
 												steps - 1,
 												ab == Double.NEGATIVE_INFINITY ? ab
 														: -ab, moveType);

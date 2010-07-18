@@ -18,7 +18,7 @@ public class Game {
 	private Watcher watcher;
 	private Player blacksPlayer;
 	private Player whitesPlayer;
-	private byte currentSide = Board.BLACK;
+	private byte currentSide = Side.BLACK;
 
 	public byte getCurrentSide() {
 		return currentSide;
@@ -55,9 +55,9 @@ public class Game {
 		Cell.init();
 		System.out.println(board);
 		Move move = null;
-		while (board.getMarblesCaptured(Board.WHITE) < 6
-				&& board.getMarblesCaptured(Board.BLACK) < 6) {
-			if (currentSide == Board.BLACK) {
+		while (board.getMarblesCaptured(Side.WHITE) < 6
+				&& board.getMarblesCaptured(Side.BLACK) < 6) {
+			if (currentSide == Side.BLACK) {
 				move = blacksPlayer.requestMove(this);
 			} else {
 				move = whitesPlayer.requestMove(this);
@@ -78,16 +78,16 @@ public class Game {
 				// }
 
 			}
-			currentSide = Board.oppositeSide(currentSide);
+			currentSide = Side.opposite(currentSide);
 			System.out.println(board);
 			System.out.println(i++ + ". "
-					+ board.getMarblesCaptured(Board.WHITE) + ":"
-					+ board.getMarblesCaptured(Board.BLACK));
+					+ board.getMarblesCaptured(Side.WHITE) + ":"
+					+ board.getMarblesCaptured(Side.BLACK));
 		}
-		if(board.getMarblesCaptured(Board.WHITE) >= 6){
-			watcher.win(Board.BLACK);
+		if(board.getMarblesCaptured(Side.WHITE) >= 6){
+			watcher.win(Side.BLACK);
 		}else{
-			watcher.win(Board.WHITE);
+			watcher.win(Side.WHITE);
 		}
 	}
 
