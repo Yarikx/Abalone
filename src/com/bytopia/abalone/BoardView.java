@@ -1,4 +1,4 @@
-package org.kpi;
+package com.bytopia.abalone;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

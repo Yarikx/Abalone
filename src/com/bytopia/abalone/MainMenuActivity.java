@@ -1,4 +1,4 @@
-package org.kpi;
+package com.bytopia.abalone;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -24,7 +24,7 @@ public class MainMenuActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 
-				Intent intent = new Intent("org.kpi.abalone.GAME");
+				Intent intent = new Intent("com.bytopia.abalone.GAME");
 				intent.putExtra("vs", "human");
 				intent.putExtra("type", "new");
 				startActivity(intent);
@@ -38,7 +38,7 @@ public class MainMenuActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 
-				Intent intent = new Intent("org.kpi.abalone.GAME");
+				Intent intent = new Intent("com.bytopia.abalone.GAME");
 				// intent.getExtras().putString("side", "BLACK");
 				intent.putExtra("vs", "cpu");
 				intent.putExtra("type", "new");
@@ -53,7 +53,7 @@ public class MainMenuActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 
-				Intent intent = new Intent("org.kpi.abalone.RESUMEGAME");
+				Intent intent = new Intent("com.bytopia.abalone.RESUMEGAME");
 				intent.putExtra("type", "resume");
 				startActivity(intent);
 

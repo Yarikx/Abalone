@@ -1,4 +1,4 @@
-package org.kpi;
+package com.bytopia.abalone;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -35,7 +35,7 @@ public class GameActivity extends Activity {
 		bw = (BoardView) findViewById(R.id.boardView);
 		bw.setParent(this);
 
-		if (intent.getAction().equals("org.kpi.abalone.GAME")) {
+		if (intent.getAction().equals("com.bytopia.abalone.GAME")) {
 
 			String sp = intent.getExtras().getString("vs");
 
@@ -44,7 +44,7 @@ public class GameActivity extends Activity {
 					bw);
 			game.setVsType(sp.equals("cpu") ? Game.CPU : Game.HUMAN);
 			startGame();
-		} else if (intent.getAction().equals("org.kpi.abalone.RESUMEGAME")) {
+		} else if (intent.getAction().equals("com.bytopia.abalone.RESUMEGAME")) {
 			Log.d("state", "resumeing");
 			try {
 				FileInputStream fis = openFileInput(FILE_NAME);

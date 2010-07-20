@@ -1,4 +1,4 @@
-package org.kpi;
+package com.bytopia.abalone;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -35,7 +35,7 @@ public class SplashAcitvity extends Activity {
 							ms += 100;
 					}
 					// Advance to the next screen.
-					startActivity(new Intent("org.kpi.abalone.MAINMENU"));
+					startActivity(new Intent("com.bytopia.abalone.MAINMENU"));
 
 				} catch (Exception e) {
 					Log.e("Splash", e.toString());
