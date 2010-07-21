@@ -1,65 +1,116 @@
 package mechanics;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
+/**
+ * Class that represents the game process, encapsulating the board, players, the
+ * current side to move and some more service details.
+ * 
+ * @author Ajee Interactive
+ */
 public class Game {
 
-	private static int PLAYER = 1;
-	private static int AI = 2;
-
+	/**
+	 * Represents a vs type "Human vs Human"
+	 */
+	public static final byte HUMAN = 1;
+	
+	/**
+	 * Represents a vs type "Human vs CPU"
+	 */
+	public static final byte CPU = 2;
+	
+	/**
+	 * Board on which the game is run.
+	 */
 	private Board board;
 
-	public void setBoard(Board board) {
-		this.board = board;
-	}
-
+	/**
+	 * Object that watches the game and somehow shows game's progress. View
+	 * entity in MVC pattern.
+	 */
 	private Watcher watcher;
+
+	/**
+	 * Player that plays for the black side.
+	 */
 	private Player blacksPlayer;
+
+	/**
+	 * Player that plays for the white side.
+	 */
 	private Player whitesPlayer;
-	private byte currentSide = Board.BLACK;
 
-	public byte getCurrentSide() {
-		return currentSide;
-	}
-
-	public void setCurrentSide(byte currentSide) {
-		this.currentSide = currentSide;
-	}
-
+	/**
+	 * Current side to move.
+	 */
+	private byte currentSide = Side.BLACK;
+	
+	/**
+	 * The type of game by players - "Human vs CPU" or "Human vs Human".
+	 */
 	private byte vsType;
-	public static final byte HUMAN = 1, CPU = 2;
 
+	/**
+	 * Constructs game instance from a given layout.
+	 * 
+	 * @param l
+	 *            starting layout
+	 * @param playerSide
+	 *            side that will be on the bottom
+	 * @param blacks
+	 *            player that will play for the black side
+	 * @param whites
+	 *            player that will play for the white side
+	 * @param watcher
+	 *            object that watches the game and somehow shows game's progress
+	 * @param vsType
+	 *            type of game by players - "Human vs CPU" or "Human vs Human".
+	 */
 	public Game(Layout l, byte playerSide, Player blacks, Player whites,
-			Watcher watcher) {
+			Watcher watcher, byte vsType) {
 		board = new Board(l, playerSide);
 		blacksPlayer = blacks;
 		whitesPlayer = whites;
 		this.watcher = watcher;
+		this.vsType = vsType;
 	}
 
+	/**
+	 * Constructs game instance from a given board.
+	 * 
+	 * @param board
+	 *            board that will be the starting position of the game
+	 * @param currentSide
+	 *            side whose turn is next
+	 * @param blacks
+	 *            player that will play for the black side
+	 * @param whites
+	 *            player that will play for the white side
+	 * @param watcher
+	 *            object that watches the game and somehow shows game's progress
+	 * @param vsType
+	 *            type of game by players - "Human vs CPU" or "Human vs Human".
+	 */
 	public Game(Board board, byte currentSide, Player blacks, Player whites,
-			Watcher watcher) {
-		this.board=board;
+			Watcher watcher, byte vsType) {
+		this.board = board;
 		blacksPlayer = blacks;
 		whitesPlayer = whites;
 		this.watcher = watcher;
 		this.currentSide = currentSide;
+		this.vsType = vsType;
 	}
 
+	/**
+	 * Starts the game process.
+	 */
 	public void start() {
-		int i = 0;
-		// BufferedReader br = new BufferedReader(new
-		// InputStreamReader(System.in));
 		Cell.init();
-		System.out.println(board);
 		Move move = null;
-		int capturedBlack=board.getMarblesCaptured(Board.BLACK),
-		capturedWhite=board.getMarblesCaptured(Board.WHITE);
-		while (board.getMarblesCaptured(Board.WHITE) < 6
-				&& board.getMarblesCaptured(Board.BLACK) < 6) {
-			if (currentSide == Board.BLACK) {
+		int capturedBlack = board.getMarblesCaptured(Side.BLACK);
+		int capturedWhite=board.getMarblesCaptured(Side.WHITE);
+		while (board.getMarblesCaptured(Side.WHITE) < 6
+				&& board.getMarblesCaptured(Side.BLACK) < 6) {
+			if (currentSide == Side.BLACK) {
 				move = blacksPlayer.requestMove(this);
 			} else {
 				move = whitesPlayer.requestMove(this);
@@ -72,50 +123,51 @@ public class Game {
 			board.makeMove(move);
 			if (watcher != null) {
 				watcher.updateView();
-				// try {
-				// br.readLine();
-				// } catch (IOException e) {
-				// // TODO Auto-generated catch block
-				// e.printStackTrace();
-				// }
+			}
 
-			}
-			
-			if(board.getMarblesCaptured(Board.WHITE)!=capturedWhite){
+			if(board.getMarblesCaptured(Side.WHITE)!=capturedWhite){
 				capturedWhite++;
-				watcher.ballCaptured(Board.WHITE);
+				watcher.ballCaptured(Side.WHITE);
 			}
 			
-			if(board.getMarblesCaptured(Board.BLACK)!=capturedBlack){
+			if(board.getMarblesCaptured(Side.BLACK)!=capturedBlack){
 				capturedBlack++;
-				watcher.ballCaptured(Board.BLACK);
+				watcher.ballCaptured(Side.BLACK);
 			}
 			
-			currentSide = Board.oppositeSide(currentSide);
-//			System.out.println(board);
-//			System.out.println(i++ + ". "
-//					+ board.getMarblesCaptured(Board.WHITE) + ":"
-//					+ board.getMarblesCaptured(Board.BLACK));
+			currentSide = Side.opposite(currentSide);
+
 		}
-		if(board.getMarblesCaptured(Board.WHITE) >= 6){
-			watcher.win(Board.BLACK);
-		}else{
-			watcher.win(Board.WHITE);
+		if (board.getMarblesCaptured(Side.WHITE) >= 6) {
+			watcher.win(Side.BLACK);
+		} else {
+			watcher.win(Side.WHITE);
 		}
 	}
 
+	/**
+	 * Returns the board on which game is run.
+	 * 
+	 * @return current board
+	 */
 	public Board getBoard() {
 		return board;
 	}
 
+	/**
+	 * Returns the current side whose turn is next.
+	 * 
+	 * @return side that will move next
+	 */
 	public byte getSide() {
 		return currentSide;
 	}
 
-	public void setVsType(byte vsType) {
-		this.vsType = vsType;
-	}
-
+	/**
+	 * Returns the type of game - "Human vs CPU" or "Human vs Human".
+	 * 
+	 * @return game type by players
+	 */
 	public byte getVsType() {
 		return vsType;
 	}

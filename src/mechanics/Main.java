@@ -4,8 +4,18 @@ package mechanics;
 public class Main {
 
 	public static void main(String[] args) throws Exception {
-		Game game = new Game(new ClassicLayout(),Board.BLACK,new Ann(),new Ann(),null);
-		game.start();
+		Cell.init();
+		Board b = new Board();
+		System.out.println(b);
+		Group a = new Group(Cell.get(3, 3), Cell.get(7, 7));
+		System.out.println();
+//		Move m = new Move(new Group(Cell.get(1, 5),Cell.get(2,6)), Direction.North, Board.WHITE);
+//		System.out.println(m);
+//		b.getMoveType(m);
+//		Move m = new Move();
+//		String s = new String();
+//		Game game = new Game(new ClassicLayout(),Board.BLACK,new Ann(),new Ann(),null);
+//		game.start();
 //		Board board = new Board(new TestLayout(),Board.BLACK);
 //		System.out.println(board);
 //		Ann ai = new Ann();
@@ -17,7 +27,7 @@ public class Main {
 //		System.out.println(ai.findNextMove(board, Board.BLACK, 3));
 //		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 //		String[] s;
-		while (true) {
+//		while (true) {
 //			br.readLine();
 //			board.makeMove(ai.findNextMove(board, Board.BLACK, 4));
 //			System.out.println(board);
@@ -37,7 +47,7 @@ public class Main {
 //			board.makeMove(ai.findNextMove(board, Board.BLACK, 3));
 //			System.out.println(board);
 //			System.out.println(board.getMarblesCaptured(Board.WHITE)+":"+board.getMarblesCaptured(Board.BLACK));
-		}
+//		}
 	}
 
 	public static Direction convDir(String s) {
@@ -65,8 +75,8 @@ public class Main {
 
 	public static byte convSide(String s) {
 		if (s.equals("W"))
-			return Board.WHITE;
+			return Side.WHITE;
 		else
-			return Board.BLACK;
+			return Side.BLACK;
 	}
 }
