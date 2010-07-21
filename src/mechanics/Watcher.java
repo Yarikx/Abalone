@@ -32,4 +32,5 @@ public interface Watcher {
 	 *            side that won the game
 	 */
 	void win(byte side);
+	void ballCaptured(byte side);
 }

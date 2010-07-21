@@ -318,5 +318,22 @@ public class Board implements Cloneable {
 		else
 			return null;
 	}
+	
+	/**
+	 * Sets the number of captured white marbles
+	 * @param whiteCaptured Quantity of white marbles captured by the enemy
+	 */
+	public void setWhiteCaptured(int whiteCaptured) {
+		this.whiteCaptured = whiteCaptured;
+	}
+
+	/**
+	 * Sets the number of captured black marbles
+	 * @param whiteCaptured Quantity of black marbles captured by the enemy
+	 */
+	public void setBlackCaptured(int blackCaptured) {
+		this.blackCaptured = blackCaptured;
+	}
+
 
 }

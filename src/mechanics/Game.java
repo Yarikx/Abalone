@@ -106,6 +106,8 @@ public class Game {
 	public void start() {
 		Cell.init();
 		Move move = null;
+		int capturedBlack = board.getMarblesCaptured(Side.BLACK);
+		int capturedWhite=board.getMarblesCaptured(Side.WHITE);
 		while (board.getMarblesCaptured(Side.WHITE) < 6
 				&& board.getMarblesCaptured(Side.BLACK) < 6) {
 			if (currentSide == Side.BLACK) {
@@ -122,7 +124,19 @@ public class Game {
 			if (watcher != null) {
 				watcher.updateView();
 			}
+
+			if(board.getMarblesCaptured(Side.WHITE)!=capturedWhite){
+				capturedWhite++;
+				watcher.ballCaptured(Side.WHITE);
+			}
+			
+			if(board.getMarblesCaptured(Side.BLACK)!=capturedBlack){
+				capturedBlack++;
+				watcher.ballCaptured(Side.BLACK);
+			}
+			
 			currentSide = Side.opposite(currentSide);
+
 		}
 		if (board.getMarblesCaptured(Side.WHITE) >= 6) {
 			watcher.win(Side.BLACK);
