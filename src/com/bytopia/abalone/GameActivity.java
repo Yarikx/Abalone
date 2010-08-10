@@ -12,6 +12,7 @@ import mechanics.Board;
 import mechanics.ClassicLayout;
 import mechanics.Game;
 import mechanics.Player;
+import mechanics.Side;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -38,11 +39,10 @@ public class GameActivity extends Activity {
 		if (intent.getAction().equals("com.bytopia.abalone.GAME")) {
 
 			String sp = intent.getExtras().getString("vs");
-
-			Player secondPlayer = sp.equals("cpu") ? (new Ann()) : bw;
-			game = new Game(new ClassicLayout(), Board.BLACK, bw, secondPlayer,
-					bw);
-			game.setVsType(sp.equals("cpu") ? Game.CPU : Game.HUMAN);
+			
+			Player secondPlayer = sp.equals("cpu")?(new Ann()):bw;
+			game = new Game(new ClassicLayout(), Side.BLACK, bw,
+					secondPlayer, bw, sp.equals("cpu") ? Game.CPU : Game.HUMAN);
 			startGame();
 		} else if (intent.getAction().equals("com.bytopia.abalone.RESUMEGAME")) {
 			Log.d("state", "resumeing");
@@ -53,18 +53,18 @@ public class GameActivity extends Activity {
 				byte side = ois.readByte();
 				byte vsType = ois.readByte();
 				Player secondPlayer = (vsType == Game.HUMAN) ? bw : (new Ann());
-				game = new Game(board, side, bw, secondPlayer, bw);
+				game = new Game(board, side, bw, secondPlayer, bw,vsType);
 				byte n = ois.readByte();
 				//bw.ballSizeRecalc();
 				game.getBoard().setBlackCaptured(n);
 				
 				for(int i =1;i<=n;i++){
-					ballCaptured(Board.BLACK);
+					ballCaptured(Side.BLACK);
 				}
 				n = ois.readByte();
 				game.getBoard().setWhiteCaptured(n);
 				for(int i =1;i<=n;i++){
-					ballCaptured(Board.WHITE);
+					ballCaptured(Side.WHITE);
 				}
 				
 				startGame();

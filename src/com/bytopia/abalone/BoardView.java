@@ -14,6 +14,7 @@ import mechanics.Move;
 import mechanics.MoveType;
 import mechanics.Player;
 import mechanics.Watcher;
+import mechanics.Side;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -679,7 +680,7 @@ public class BoardView extends View implements Player, Watcher {
 	@Override
 	public void win(byte side) {
 
-		final String sideString = (side == Board.BLACK) ? r
+		final String sideString = (side == Side.BLACK) ? r
 				.getString(R.string.black) : r.getString(R.string.white);
 
 		parent.runOnUiThread(new Runnable() {
