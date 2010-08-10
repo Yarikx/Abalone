@@ -109,10 +109,10 @@ public class GameActivity extends Activity {
 					Context.MODE_PRIVATE);
 			ObjectOutputStream oos = new ObjectOutputStream(fos);
 			oos.writeObject(game.getBoard());
-			oos.writeByte(game.getCurrentSide());
+			oos.writeByte(game.getSide());
 			oos.writeByte(game.getVsType());
-			oos.writeByte(game.getBoard().getMarblesCaptured(Board.BLACK));
-			oos.writeByte(game.getBoard().getMarblesCaptured(Board.WHITE));
+			oos.writeByte(game.getBoard().getMarblesCaptured(Side.BLACK));
+			oos.writeByte(game.getBoard().getMarblesCaptured(Side.WHITE));
 			oos.close();
 
 		} catch (FileNotFoundException e) {
@@ -132,13 +132,13 @@ public class GameActivity extends Activity {
 				LinearLayout ll1 = (LinearLayout) findViewById(R.id.top_balls);
 				LinearLayout ll2 = (LinearLayout) findViewById(R.id.bottom_balls);
 				ImageView iw = new ImageView(bw.getContext());
-				iw.setImageResource((side == Board.BLACK) ? R.drawable.black_ball
+				iw.setImageResource((side == Side.BLACK) ? R.drawable.black_ball
 						: R.drawable.white_ball);
 				iw.setAdjustViewBounds(true);
 				iw.setMaxHeight(DEFBALLSIZE);
 				iw.setMaxWidth(DEFBALLSIZE);
 				iw.setScaleType(ScaleType.CENTER_INSIDE);
-				if (side == Board.BLACK) {
+				if (side == Side.BLACK) {
 					ll1.addView(iw);
 				} else {
 					ll2.addView(iw);

@@ -11,12 +11,12 @@ public final class Side {
 	/**
 	 * White side.
 	 */
-	public static byte WHITE = 2;
+	public final static byte WHITE = 2;
 	
 	/**
 	 * Black side.
 	 */
-	public static byte BLACK = 3;
+	public final static byte BLACK = 3;
 
 	/**
 	 * Returns the side that is opposite to the given.

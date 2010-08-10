@@ -10,22 +10,22 @@ public abstract class Layout {
 	/**
 	 * Represents a non-existing cell.
 	 */
-	protected static final byte N = 0;
+	public static final byte N = 0;
 
 	/**
 	 * Represents an empty cell.
 	 */
-	protected static final byte E = 1;
+	public static final byte E = 1;
 
 	/**
 	 * Represents a cell with white marble.
 	 */
-	protected static final byte W = Side.WHITE;
+	public static final byte W = Side.WHITE;
 	
 	/**
 	 * Represents a cell with black marble.
 	 */
-	protected static final byte B = Side.BLACK;
+	public static final byte B = Side.BLACK;
 
 	/**
 	 * Returns a two-dimensional array filled with definitions of cells for the starting position with black marbles downside.

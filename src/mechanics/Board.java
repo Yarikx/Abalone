@@ -1,5 +1,6 @@
 package mechanics;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,7 +8,7 @@ import java.util.List;
  * Class that represents a playing board with all cells and marbles in them.
  * @author Ajee Interactive
  */
-public class Board implements Cloneable {
+public class Board implements Cloneable,Serializable {
 
 	/**
 	 * Array of cell descriptions.
