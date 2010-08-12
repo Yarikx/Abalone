@@ -56,9 +56,9 @@ public final class Cell {
 	 * @return cell instance
 	 */
 	public static Cell get(int row, int column) {
-		if (row > 9 || row < 1 || column > Board.getMaxColumn(row)
-				|| column < Board.getMinColumn(row))
-			return cellStorage[10][10];
+//		if (row > 9 || row < 1 || column > Board.getMaxColumn(row)
+//				|| column < Board.getMinColumn(row))
+//			return cellStorage[10][10];
 		return cellStorage[row][column];
 	}
 
@@ -90,20 +90,31 @@ public final class Cell {
 	public Cell shift(Direction d) {
 		switch (d) {
 		case NorthWest:
-			return get(row - 1, column - 1);
+			if (row > 1 && column > Board.getMinColumn(row))
+				return get(row - 1, column - 1);
+			break;
 		case North:
-			return get(row - 1, column);
+			if (row > 1)
+				return get(row - 1, column);
+			break;
 		case East:
-			return get(row, column + 1);
+			if (column < Board.getMaxColumn(row))
+				return get(row, column + 1);
+			break;
 		case SouthEast:
-			return get(row + 1, column + 1);
+			if (row < 9 && column > Board.getMaxColumn(row))
+				return get(row + 1, column + 1);
+			break;
 		case South:
-			return get(row + 1, column);
+			if (row < 9)
+				return get(row + 1, column);
+			break;
 		case West:
-			return get(row, column - 1);
-		default:
-			return get(row, column);
+			if (column > Board.getMinColumn(row))
+				return get(row, column - 1);
+			break;
 		}
+		return get(row, column);
 	}
 
 	/**

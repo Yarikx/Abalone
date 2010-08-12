@@ -34,7 +34,7 @@ public class Board implements Cloneable,Serializable {
 	}
 
 	/**
-	 * Constructs a board with an arbitraty layout and a given side on the
+	 * Constructs a board with an arbitrary layout and a given side on the
 	 * bottom.
 	 * 
 	 * @param l
@@ -128,22 +128,23 @@ public class Board implements Cloneable,Serializable {
 	 * @return move type instance
 	 */
 	public MoveType getMoveType(Move m) {
+		Group destination = m.getDestination();
 		// If move is a leap
-		boolean result = true;
-		for (Cell c : m.getDestination().getCells()) {
+		boolean result = true;un
+		for (Cell c : destination.getCells()) {
 			if (getState(c) != Layout.E)
 				result = false;
 		}
 		if (result == true)
 			return new MoveType(MoveType.LEAP, m.getSource(),
-					m.getDestination());
+					destination);
 		// If move is a pushing move...
 		if (m.isPushing()) {
 			Direction d = m.getDirection();
 			// ...check if it is a silent pushing move
 			if (getState(m.getPeak().shift(d)) == Layout.E)
 				return new MoveType(MoveType.SILENTPUSH, m.getSource(),
-						m.getDestination());
+						destination);
 			// Otherwise it's a enemy pushing move
 			int nCell = getState(m.getPeak().shift(d));
 			if (nCell == Layout.N)
@@ -153,14 +154,14 @@ public class Board implements Cloneable,Serializable {
 			if (nCell == enemyMarble
 					&& (nnCell == Layout.E || nnCell == Layout.N))
 				return new MoveType(MoveType.ENEMYPUSH, new Group(m.getTail(),
-						m.getPeak().shift(d)), m.getDestination());
+						m.getPeak().shift(d)), destination);
 			if (nnCell == Layout.N || m.getSource().getSize() == 2)
 				return new MoveType(MoveType.NOMOVE);
 			int nnnCell = getState(m.getPeak().shift(d).shift(d).shift(d));
 			if (nCell == enemyMarble && nnCell == enemyMarble
 					&& (nnnCell == Layout.E || nnnCell == Layout.N))
 				return new MoveType(MoveType.ENEMYPUSH, new Group(m.getTail(),
-						m.getPeak().shift(d).shift(d)), m.getDestination());
+						m.getPeak().shift(d).shift(d)), destination);
 		}
 		return new MoveType(MoveType.NOMOVE);
 	}
