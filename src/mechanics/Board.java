@@ -130,7 +130,9 @@ public class Board implements Cloneable,Serializable {
 	public MoveType getMoveType(Move m) {
 		Group destination = m.getDestination();
 		// If move is a leap
-		boolean result = true;un
+		boolean result = true;
+		//TODO del this
+		Cell[] tempC = destination.getCells();
 		for (Cell c : destination.getCells()) {
 			if (getState(c) != Layout.E)
 				result = false;

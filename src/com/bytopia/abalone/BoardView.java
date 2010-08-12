@@ -168,13 +168,11 @@ public class BoardView extends View implements Player, Watcher {
 	@Override
 	protected void onDraw(Canvas canvas) {
 		// canvas.drawLine(0, 0, 100, 100, defaultPaint);
-//		Log.d("draw", "height = " + getHeight());
-//		Log.d("draw", "width = " + getWidth());
+		// Log.d("draw", "height = " + getHeight());
+		// Log.d("draw", "width = " + getWidth());
 
 		// TODO boar edges
 		canvas.save();
-
-		
 
 		for (int i = 1; i <= 6; i++) {
 			canvas.drawRect(boardRect, boardP);
@@ -239,9 +237,8 @@ public class BoardView extends View implements Player, Watcher {
 
 	private void drawBall(Ball ball, Canvas canvas) {
 
-		dst.set((int) (ball.x - ballSize / 2),
-				(int) (ball.y - ballSize / 2), (int) (ball.x + ballSize / 2),
-				(int) (ball.y + ballSize / 2));
+		dst.set((int) (ball.x - ballSize / 2), (int) (ball.y - ballSize / 2),
+				(int) (ball.x + ballSize / 2), (int) (ball.y + ballSize / 2));
 
 		switch (ball.state) {
 		case Layout.B:
@@ -292,10 +289,10 @@ public class BoardView extends View implements Player, Watcher {
 		// invalidate();
 		this.board = board;
 
-//		Log.d("screen", getHeight() + "");
-//		Log.d("screen", getMeasuredHeight() + "");
+		// Log.d("screen", getHeight() + "");
+		// Log.d("screen", getMeasuredHeight() + "");
 		ballSizeRecalc();
-		Log.d("draw", "ball size="+ballSize);
+		Log.d("draw", "ball size=" + ballSize);
 
 		for (int i = 1; i <= 9; i++) {
 			float shift = (5f - i) * ballSize / 2f;
@@ -310,7 +307,6 @@ public class BoardView extends View implements Player, Watcher {
 				}
 			}
 		}
-		
 
 		// postInvalidate();
 		animBals = emptyBalls = null;
@@ -328,8 +324,8 @@ public class BoardView extends View implements Player, Watcher {
 	}
 
 	public void ballSizeRecalc() {
-		boardRect = new RectF(getWidth() / 4f - 1, 1,
-				3f * getWidth() / 4f + 1, getWidth() / 2);
+		boardRect = new RectF(getWidth() / 4f - 1, 1, 3f * getWidth() / 4f + 1,
+				getWidth() / 2);
 		balls = new ArrayList<Ball>();
 		ballSize = ((float) size - 2 * borderSize) / 9f;
 	}
@@ -345,12 +341,15 @@ public class BoardView extends View implements Player, Watcher {
 					Log.d("input", "startCell " + startCell.toString());
 					selectionStarted = true;
 				} else if (e.getAction() == MotionEvent.ACTION_MOVE) {
+
 					currentGroup = board
 							.getUsableGroup(
 									startCell,
 									getCell(e.getX(), e.getY()),
 									getDirectionFromCell(e.getX(), e.getY(),
 											startCell), game.getSide());
+					Log.d("input", getCell(e.getX(), e.getY()).toString() + " curG "
+							+ currentGroup);
 				} else if (e.getAction() == MotionEvent.ACTION_UP
 						&& selectionStarted) {
 					selectedGroup = board
@@ -514,7 +513,8 @@ public class BoardView extends View implements Player, Watcher {
 			d = Direction.North;
 			break;
 		}
-		Log.d("input", "angle = " + angle / Math.PI * 180 + " t=" + t + " " + d);
+		// Log.d("input", "angle = " + angle / Math.PI * 180 + " t=" + t + " " +
+		// d);
 		return d;
 	}
 
@@ -611,7 +611,7 @@ public class BoardView extends View implements Player, Watcher {
 		PointF point;
 		for (Cell cell : moveType.getMovedCells().getCells()) {
 			float x, y;
-			 point = getPointByCell(cell);
+			point = getPointByCell(cell);
 			x = point.x;
 			y = point.y;
 			emptyBalls.add(new Ball(x, y, Layout.E));
@@ -628,7 +628,6 @@ public class BoardView extends View implements Player, Watcher {
 				ball.y += (1d / (double) N) * Math.sin(angle) * ballSize;
 			}
 
-			
 			try {
 				Thread.sleep(T);
 			} catch (InterruptedException e) {
@@ -702,8 +701,8 @@ public class BoardView extends View implements Player, Watcher {
 
 	@Override
 	public void ballCaptured(byte side) {
-		((GameActivity)parent).ballCaptured(side);
-		
+		((GameActivity) parent).ballCaptured(side);
+
 	}
 
 	public float getBallSize() {

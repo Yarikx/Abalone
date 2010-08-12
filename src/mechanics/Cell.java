@@ -102,7 +102,7 @@ public final class Cell {
 				return get(row, column + 1);
 			break;
 		case SouthEast:
-			if (row < 9 && column > Board.getMaxColumn(row))
+			if (row < 9 && column < Board.getMaxColumn(row))
 				return get(row + 1, column + 1);
 			break;
 		case South:
