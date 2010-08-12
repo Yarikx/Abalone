@@ -90,27 +90,27 @@ public final class Cell {
 	public Cell shift(Direction d) {
 		switch (d) {
 		case NorthWest:
-			if (row > 1 && column > Board.getMinColumn(row))
+			if (row >= 1 && column >= Board.getMinColumn(row))
 				return get(row - 1, column - 1);
 			break;
 		case North:
-			if (row > 1)
+			if (row >= 1)
 				return get(row - 1, column);
 			break;
 		case East:
-			if (column < Board.getMaxColumn(row))
+			if (column <= Board.getMaxColumn(row))
 				return get(row, column + 1);
 			break;
 		case SouthEast:
-			if (row < 9 && column < Board.getMaxColumn(row))
+			if (row <= 9 && column <= Board.getMaxColumn(row))
 				return get(row + 1, column + 1);
 			break;
 		case South:
-			if (row < 9)
+			if (row <= 9)
 				return get(row + 1, column);
 			break;
 		case West:
-			if (column > Board.getMinColumn(row))
+			if (column >= Board.getMinColumn(row))
 				return get(row, column - 1);
 			break;
 		}
