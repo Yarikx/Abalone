@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import mechanics.Ann;
+import mechanics.AiAnn;
 import mechanics.Board;
 import mechanics.ClassicLayout;
 import mechanics.Game;
@@ -40,7 +40,7 @@ public class GameActivity extends Activity {
 
 			String sp = intent.getExtras().getString("vs");
 			
-			Player secondPlayer = sp.equals("cpu")?(new Ann()):bw;
+			Player secondPlayer = sp.equals("cpu")?(new AiAnn()):bw;
 			game = new Game(new ClassicLayout(), Side.BLACK, bw,
 					secondPlayer, bw, sp.equals("cpu") ? Game.CPU : Game.HUMAN);
 			startGame();
@@ -52,7 +52,7 @@ public class GameActivity extends Activity {
 				Board board = (Board) ois.readObject();
 				byte side = ois.readByte();
 				byte vsType = ois.readByte();
-				Player secondPlayer = (vsType == Game.HUMAN) ? bw : (new Ann());
+				Player secondPlayer = (vsType == Game.HUMAN) ? bw : (new AiAnn());
 				game = new Game(board, side, bw, secondPlayer, bw,vsType);
 				byte n = ois.readByte();
 				//bw.ballSizeRecalc();
