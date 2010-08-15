@@ -3,7 +3,7 @@ package mechanics;
 /**
  * Enumeration that represents possible all directions of movement.
  * 
- * @author Ajee Interactive
+ * @author Bytopia
  */
 public enum Direction {
 

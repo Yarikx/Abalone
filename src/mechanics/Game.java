@@ -4,7 +4,7 @@ package mechanics;
  * Class that represents the game process, encapsulating the board, players, the
  * current side to move and some more service details.
  * 
- * @author Ajee Interactive
+ * @author Bytopia
  */
 public class Game {
 
@@ -127,12 +127,12 @@ public class Game {
 
 			if(board.getMarblesCaptured(Side.WHITE)!=capturedWhite){
 				capturedWhite++;
-				watcher.ballCaptured(Side.WHITE);
+				watcher.marbleCaptured(Side.WHITE);
 			}
 			
 			if(board.getMarblesCaptured(Side.BLACK)!=capturedBlack){
 				capturedBlack++;
-				watcher.ballCaptured(Side.BLACK);
+				watcher.marbleCaptured(Side.BLACK);
 			}
 			
 			currentSide = Side.opposite(currentSide);

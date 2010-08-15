@@ -3,7 +3,7 @@ package mechanics;
 /**
  * Class that represents an abstract factory of starting positions (layouts).
  * 
- * @author Ajee Interactive
+ * @author Bytopia
  */
 public abstract class Layout {
 

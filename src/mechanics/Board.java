@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  * Class that represents a playing board with all cells and marbles in them.
- * @author Ajee Interactive
+ * @author Bytopia
  */
 public class Board implements Cloneable,Serializable {
 

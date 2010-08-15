@@ -3,7 +3,7 @@ package mechanics;
 /**
  * Interface that describes how the AI classes should work.
  * 
- * @author Ajee Interactive
+ * @author Bytopia
  */
 public interface ArtificialIntilligence extends Player {
 

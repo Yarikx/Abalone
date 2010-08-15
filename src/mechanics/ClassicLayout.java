@@ -3,7 +3,7 @@ package mechanics;
 /**
  * Class that constructs a classic Abalone starting position.
  * 
- * @author Ajee Interactive
+ * @author Bytopia
  */
 public class ClassicLayout extends Layout {
 

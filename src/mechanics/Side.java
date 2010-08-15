@@ -4,7 +4,7 @@ package mechanics;
  * Class that contains player sides. Not a enumeration because of performance
  * issues.
  * 
- * @author Ajee Interactive
+ * @author Bytopia
  */
 public final class Side {
 

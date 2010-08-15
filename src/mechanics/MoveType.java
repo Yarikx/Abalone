@@ -3,7 +3,7 @@ package mechanics;
 /**
  * Service class that represents a type of move made on the specific board.
  * 
- * @author Ajee Interactive
+ * @author Bytopia
  */
 public class MoveType {
 

@@ -4,7 +4,7 @@ package mechanics;
  * Interface that describes how the Watcher objects should operate in order to
  * display game progress.
  * 
- * @author Ajee Interactive
+ * @author Bytopia
  */
 public interface Watcher {
 
@@ -32,5 +32,12 @@ public interface Watcher {
 	 *            side that won the game
 	 */
 	void win(byte side);
-	void ballCaptured(byte side);
+
+	/**
+	 * Triggers when one of the side captures enemy's marble.
+	 * 
+	 * @param side
+	 *            the side that has captured the marble
+	 */
+	void marbleCaptured(byte side);
 }

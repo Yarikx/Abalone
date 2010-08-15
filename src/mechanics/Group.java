@@ -3,7 +3,7 @@ package mechanics;
 /**
  * Class that represents an arbitrary group of cells.
  * 
- * @author Ajee Interactive
+ * @author Bytopia
  */
 public class Group {
 

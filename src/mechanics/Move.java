@@ -4,7 +4,7 @@ package mechanics;
  * Class that represents a process of moving - the group which is moved, new
  * position of this group and so on.
  * 
- * @author Ajee Interactive
+ * @author Bytopia
  */
 public class Move {
 

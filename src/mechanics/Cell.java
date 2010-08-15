@@ -3,7 +3,7 @@ package mechanics;
 /**
  * Class that represents a cell - coordinates of X and Y on the game board.
  * 
- * @author Ajee Interactive
+ * @author Bytopia
  * 
  */
 public final class Cell {

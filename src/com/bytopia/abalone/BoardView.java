@@ -700,7 +700,7 @@ public class BoardView extends View implements Player, Watcher {
 	}
 
 	@Override
-	public void ballCaptured(byte side) {
+	public void marbleCaptured(byte side) {
 		((GameActivity) parent).ballCaptured(side);
 
 	}
