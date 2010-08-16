@@ -1,5 +1,7 @@
 package com.bytopia.abalone;
 
+import com.bytopia.abalone.R;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;

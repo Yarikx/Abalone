@@ -7,12 +7,17 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import mechanics.AiAnn;
-import mechanics.Board;
-import mechanics.ClassicLayout;
-import mechanics.Game;
-import mechanics.Player;
-import mechanics.Side;
+import com.bytopia.abalone.R;
+import com.bytopia.abalone.mechanics.AiAnn;
+import com.bytopia.abalone.mechanics.AiBeatrice;
+import com.bytopia.abalone.mechanics.AiCharlotte;
+import com.bytopia.abalone.mechanics.AiDeborah;
+import com.bytopia.abalone.mechanics.Board;
+import com.bytopia.abalone.mechanics.ClassicLayout;
+import com.bytopia.abalone.mechanics.Game;
+import com.bytopia.abalone.mechanics.Player;
+import com.bytopia.abalone.mechanics.Side;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -40,7 +45,7 @@ public class GameActivity extends Activity {
 
 			String sp = intent.getExtras().getString("vs");
 			
-			Player secondPlayer = sp.equals("cpu")?(new AiAnn()):bw;
+			Player secondPlayer = sp.equals("cpu")?(new AiDeborah()):bw;
 			game = new Game(new ClassicLayout(), Side.BLACK, bw,
 					secondPlayer, bw, sp.equals("cpu") ? Game.CPU : Game.HUMAN);
 			startGame();
